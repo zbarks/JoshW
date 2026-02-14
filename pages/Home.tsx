@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Apple, ArrowDown, MapPin, Smartphone, Users } from 'lucide-react';
-import ThreeDFootball from '../components/ThreeDFootball';
 import CurtainReveal from '../components/CurtainReveal';
 
 const GALLERY_IMAGES = [
@@ -13,9 +12,7 @@ const GALLERY_IMAGES = [
 
 const Home: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [showCurtain, setShowCurtain] = useState(true);
-  const [curtainProgress, setCurtainProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,20 +21,10 @@ const Home: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleCurtainProgress = (progress: number) => {
-    setCurtainProgress(progress);
-    // Trigger content animation when curtain is ~30% open
-    if (progress > 0.3 && !isLoaded) {
-      setIsLoaded(true);
-    }
-  };
-
   const handleCurtainComplete = () => {
     setShowCurtain(false);
-    setIsLoaded(true);
   };
 
-  // Simplified 3D style that doesn't fade the opacity aggressively
   const getSleek3DStyle = (offset: number) => {
     const progress = Math.max(0, scrollY - offset);
     return {
@@ -60,14 +47,14 @@ const Home: React.FC = () => {
           />
           
           <div className="relative z-10 text-center max-w-7xl mx-auto flex flex-col items-center">
-            <div className={`${isLoaded ? 'animate-reveal-up' : 'opacity-0'}`}>
+            <div className="animate-reveal-up">
               <h1 className="font-heading font-black text-7xl md:text-9xl lg:text-[10rem] mb-2 leading-[0.85] uppercase tracking-normal text-white">
                 FOOT<br />
                 <span className="text-brandRed">FORWARD</span>
               </h1>
             </div>
             
-            <div className={`${isLoaded ? 'animate-reveal-up reveal-delay-1' : 'opacity-0'} mt-10 space-y-8`}>
+            <div className="animate-reveal-up reveal-delay-1 mt-10 space-y-8">
               <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-400 uppercase tracking-[0.2em]">
                 EDINBURGH'S ELITE ACADEMY
               </h2>
@@ -88,10 +75,6 @@ const Home: React.FC = () => {
                   MEET JOSH
                 </a>
               </div>
-            </div>
-
-            <div className="mt-20 w-full flex justify-center scale-90 md:scale-100">
-               <ThreeDFootball />
             </div>
           </div>
 
@@ -225,13 +208,8 @@ const Home: React.FC = () => {
         </section>
       </div>
 
-      {/* Curtain appears OVER everything */}
-      {showCurtain && (
-        <CurtainReveal 
-          onComplete={handleCurtainComplete}
-          onProgress={handleCurtainProgress}
-        />
-      )}
+      {/* Curtain overlay - renders AFTER content so it's on top */}
+      {showCurtain && <CurtainReveal onComplete={handleCurtainComplete} />}
     </>
   );
 };
