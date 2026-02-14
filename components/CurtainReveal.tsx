@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 interface CurtainRevealProps {
@@ -7,9 +7,11 @@ interface CurtainRevealProps {
 
 const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [hasRun, setHasRun] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || hasRun) return;
+    setHasRun(true);
 
     // Scene setup
     const scene = new THREE.Scene();
@@ -48,8 +50,9 @@ const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete }) => {
 
     // Animation
     let startTime: number | null = null;
-    const delay = 500; // 0.5s delay
-    const duration = 1500; // 1.5s animation
+    const delay = 300; // 0.3s delay
+    const duration = 1200; // 1.2s animation
+    let animationId: number;
 
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime;
@@ -70,17 +73,16 @@ const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete }) => {
           setTimeout(() => {
             onComplete();
           }, 100);
+          renderer.render(scene, camera);
+          return;
         }
       }
 
       renderer.render(scene, camera);
-      
-      if (elapsed < delay + duration + 100) {
-        requestAnimationFrame(animate);
-      }
+      animationId = requestAnimationFrame(animate);
     };
 
-    animate(0);
+    animationId = requestAnimationFrame(animate);
 
     // Handle resize
     const handleResize = () => {
@@ -93,8 +95,9 @@ const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete }) => {
 
     // Cleanup
     return () => {
+      cancelAnimationFrame(animationId);
       window.removeEventListener('resize', handleResize);
-      if (containerRef.current && renderer.domElement) {
+      if (containerRef.current && renderer.domElement && containerRef.current.contains(renderer.domElement)) {
         containerRef.current.removeChild(renderer.domElement);
       }
       renderer.dispose();
@@ -102,7 +105,7 @@ const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete }) => {
       rightGeometry.dispose();
       material.dispose();
     };
-  }, [onComplete]);
+  }, [onComplete, hasRun]);
 
   return (
     <div 
@@ -114,6 +117,7 @@ const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete }) => {
         width: '100%',
         height: '100%',
         zIndex: 9999,
+        backgroundColor: '#000',
         pointerEvents: 'none'
       }}
     />

@@ -13,7 +13,21 @@ const GALLERY_IMAGES = [
 const Home: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const [showCurtain, setShowCurtain] = useState(true);
+  const [curtainComplete, setCurtainComplete] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Prevent scroll during curtain animation
+    if (showCurtain) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showCurtain]);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -22,6 +36,7 @@ const Home: React.FC = () => {
   }, []);
 
   const handleCurtainComplete = () => {
+    setCurtainComplete(true);
     setShowCurtain(false);
   };
 
@@ -35,6 +50,9 @@ const Home: React.FC = () => {
 
   return (
     <>
+      {/* Curtain renders FIRST - before content */}
+      {showCurtain && <CurtainReveal onComplete={handleCurtainComplete} />}
+      
       <div ref={containerRef} className="bg-brandBlack overflow-x-hidden">
         {/* 3D Hero Section */}
         <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
@@ -207,9 +225,6 @@ const Home: React.FC = () => {
           </div>
         </section>
       </div>
-
-      {/* Curtain overlay - renders AFTER content so it's on top */}
-      {showCurtain && <CurtainReveal onComplete={handleCurtainComplete} />}
     </>
   );
 };
