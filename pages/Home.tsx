@@ -18,6 +18,9 @@ const Home: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Load content immediately, don't wait for curtain
+    setIsLoaded(true);
+    
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -25,7 +28,6 @@ const Home: React.FC = () => {
 
   const handleCurtainComplete = () => {
     setShowCurtain(false);
-    setIsLoaded(true);
   };
 
   // Simplified 3D style that doesn't fade the opacity aggressively
@@ -39,8 +41,6 @@ const Home: React.FC = () => {
 
   return (
     <>
-      {showCurtain && <CurtainReveal onComplete={handleCurtainComplete} />}
-      
       <div ref={containerRef} className="bg-brandBlack overflow-x-hidden">
         {/* 3D Hero Section */}
         <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
@@ -218,6 +218,9 @@ const Home: React.FC = () => {
           </div>
         </section>
       </div>
+
+      {/* Curtain appears OVER everything */}
+      {showCurtain && <CurtainReveal onComplete={handleCurtainComplete} />}
     </>
   );
 };
