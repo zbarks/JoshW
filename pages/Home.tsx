@@ -15,19 +15,26 @@ const Home: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showCurtain, setShowCurtain] = useState(true);
+  const [curtainProgress, setCurtainProgress] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Load content immediately, don't wait for curtain
-    setIsLoaded(true);
-    
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleCurtainProgress = (progress: number) => {
+    setCurtainProgress(progress);
+    // Trigger content animation when curtain is ~30% open
+    if (progress > 0.3 && !isLoaded) {
+      setIsLoaded(true);
+    }
+  };
+
   const handleCurtainComplete = () => {
     setShowCurtain(false);
+    setIsLoaded(true);
   };
 
   // Simplified 3D style that doesn't fade the opacity aggressively
@@ -35,7 +42,7 @@ const Home: React.FC = () => {
     const progress = Math.max(0, scrollY - offset);
     return {
       transform: `perspective(1200px) translateY(${progress * -0.05}px) translateZ(${Math.min(50, progress * 0.1)}px) rotateX(${Math.min(3, progress * 0.005)}deg)`,
-      opacity: 1 // Keep it fully visible for a cleaner look
+      opacity: 1
     };
   };
 
@@ -93,7 +100,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* Biography Section - Refined for "Sleek and Less Dark" */}
+        {/* Biography Section */}
         <section id="bio" className="py-48 px-4 relative">
           <div 
             className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center"
@@ -107,7 +114,6 @@ const Home: React.FC = () => {
                   alt="Josh Walker" 
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                 />
-                {/* Lightened overlay for a cleaner look */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                 <div className="absolute bottom-10 left-10">
                   <p className="text-brandRed font-black tracking-widest text-xs mb-2 uppercase">HEAD COACH</p>
@@ -167,7 +173,7 @@ const Home: React.FC = () => {
           </div>
         </section>
 
-        {/* Gallery Section - Subtle and Elegant */}
+        {/* Gallery Section */}
         <section className="py-40 bg-brandBlack px-4">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-center text-3xl font-heading font-black mb-20 text-white uppercase tracking-widest">
@@ -220,7 +226,12 @@ const Home: React.FC = () => {
       </div>
 
       {/* Curtain appears OVER everything */}
-      {showCurtain && <CurtainReveal onComplete={handleCurtainComplete} />}
+      {showCurtain && (
+        <CurtainReveal 
+          onComplete={handleCurtainComplete}
+          onProgress={handleCurtainProgress}
+        />
+      )}
     </>
   );
 };

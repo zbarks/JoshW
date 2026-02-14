@@ -3,9 +3,10 @@ import * as THREE from 'three';
 
 interface CurtainRevealProps {
   onComplete: () => void;
+  onProgress?: (progress: number) => void;
 }
 
-const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete }) => {
+const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete, onProgress }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -93,8 +94,8 @@ const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete }) => {
 
     // Animation variables
     let animationProgress = 0;
-    const animationDelay = 0.5;
-    const animationDuration = 1.8;
+    const animationDelay = 0.3; // Shorter delay
+    const animationDuration = 1.5; // Slightly faster
     let startTime: number | null = null;
 
     // Animation loop
@@ -112,6 +113,11 @@ const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete }) => {
           : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
         animationProgress = eased;
+
+        // Pass progress to parent
+        if (onProgress) {
+          onProgress(eased);
+        }
 
         // Slide curtains apart
         const slideDistance = curtainWidth / 2 + 2;
@@ -166,7 +172,7 @@ const CurtainReveal: React.FC<CurtainRevealProps> = ({ onComplete }) => {
       leftMaterial.dispose();
       rightMaterial.dispose();
     };
-  }, [onComplete]);
+  }, [onComplete, onProgress]);
 
   return (
     <div 
