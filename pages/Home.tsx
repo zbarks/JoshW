@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Apple, ArrowDown, MapPin, Smartphone, Users } from 'lucide-react';
 import ThreeDFootball from '../components/ThreeDFootball';
-import FootballEntranceAnimation from '../components/FootballEntranceAnimation';
+import CurtainReveal from '../components/CurtainReveal';
 
 const GALLERY_IMAGES = [
   "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/d48238f5-3960-4a58-9df2-a11b8565a30c/7d8dc65e-86d0-417f-8e44-552ce498052d.jpg?format=500w",
@@ -14,7 +14,7 @@ const GALLERY_IMAGES = [
 const Home: React.FC = () => {
   const [scrollY, setScrollY] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [showEntrance, setShowEntrance] = useState(true);
+  const [showCurtain, setShowCurtain] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,11 +23,9 @@ const Home: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleEntranceComplete = () => {
-    setTimeout(() => {
-      setShowEntrance(false);
-      setIsLoaded(true);
-    }, 500);
+  const handleCurtainComplete = () => {
+    setShowCurtain(false);
+    setIsLoaded(true);
   };
 
   // Simplified 3D style that doesn't fade the opacity aggressively
@@ -41,7 +39,7 @@ const Home: React.FC = () => {
 
   return (
     <>
-      {showEntrance && <FootballEntranceAnimation onComplete={handleEntranceComplete} />}
+      {showCurtain && <CurtainReveal onComplete={handleCurtainComplete} />}
       
       <div ref={containerRef} className="bg-brandBlack overflow-x-hidden">
         {/* 3D Hero Section */}
