@@ -25,7 +25,7 @@ const Contact: React.FC = () => {
     try {
       const result = await emailjs.send(
         'service_vigjre8',           // Your Service ID
-        'template_j9elzbr',          // Your Template ID
+        'template_addarhw',          // Your Template ID
         {
           from_name: `${formData.firstName} ${formData.lastName}`,
           from_email: formData.email,
