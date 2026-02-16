@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Apple, ArrowDown, MapPin, Smartphone, Users } from 'lucide-react';
+import { ArrowDown, MapPin, Smartphone, Users } from 'lucide-react';
 import ThreeDFootball from '../components/ThreeDFootball';
 
 const GALLERY_IMAGES = [

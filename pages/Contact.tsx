@@ -1,8 +1,59 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 
 const Contact: React.FC = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    message: ''
+  });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('sending');
+
+    try {
+      const result = await emailjs.send(
+        'service_vigjre8',           // Your Service ID
+        'template_j9elzbr',          // Your Template ID
+        {
+          from_name: `${formData.firstName} ${formData.lastName}`,
+          from_email: formData.email,
+          message: formData.message,
+        },
+        'InEbaMpbzoTsL8cGU'          // Your Public Key
+      );
+
+      console.log('Email sent successfully:', result.text);
+      setStatus('success');
+      
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        message: ''
+      });
+
+      // Reset success message after 5 seconds
+      setTimeout(() => setStatus('idle'), 5000);
+    } catch (error) {
+      console.error('Email send failed:', error);
+      setStatus('error');
+      setTimeout(() => setStatus('idle'), 5000);
+    }
+  };
+
   return (
     <div className="pt-24 bg-brandBlack">
       <section className="py-24 bg-brandBlack px-4">
@@ -55,27 +106,74 @@ const Contact: React.FC = () => {
             {/* Form */}
             <div className="bg-white rounded-3xl p-8 md:p-12 text-brandBlack shadow-2xl border-t-8 border-brandRed">
               <h2 className="text-3xl font-black mb-8 uppercase italic">Send a Message</h2>
-              <form className="space-y-6">
+              
+              {status === 'success' && (
+                <div className="mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded">
+                  <p className="font-bold">Message sent successfully!</p>
+                  <p className="text-sm">We'll get back to you soon.</p>
+                </div>
+              )}
+              
+              {status === 'error' && (
+                <div className="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded">
+                  <p className="font-bold">Oops! Something went wrong.</p>
+                  <p className="text-sm">Please try again or email us directly.</p>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-xs font-black uppercase tracking-widest mb-2">First Name</label>
-                    <input type="text" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed" />
+                    <input 
+                      type="text" 
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      required
+                      className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed" 
+                    />
                   </div>
                   <div>
                     <label className="block text-xs font-black uppercase tracking-widest mb-2">Last Name</label>
-                    <input type="text" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed" />
+                    <input 
+                      type="text" 
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      required
+                      className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed" 
+                    />
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-black uppercase tracking-widest mb-2">Email</label>
-                  <input type="email" className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed" />
+                  <input 
+                    type="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed" 
+                  />
                 </div>
                 <div>
                   <label className="block text-xs font-black uppercase tracking-widest mb-2">Message</label>
-                  <textarea rows={4} className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed"></textarea>
+                  <textarea 
+                    rows={4} 
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed"
+                  ></textarea>
                 </div>
-                <button className="w-full bg-brandBlack text-white font-black py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-brandRed transition-all uppercase italic tracking-widest">
-                  SEND <Send size={20} />
+                <button 
+                  type="submit"
+                  disabled={status === 'sending'}
+                  className="w-full bg-brandBlack text-white font-black py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-brandRed transition-all uppercase italic tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {status === 'sending' ? 'SENDING...' : 'SEND'} <Send size={20} />
                 </button>
               </form>
             </div>
