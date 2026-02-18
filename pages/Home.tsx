@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { ArrowDown, MapPin, Smartphone, Users } from 'lucide-react';
 import ThreeDFootball from '../components/ThreeDFootball';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase/config';
 
 const GALLERY_IMAGES = [
   "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/d48238f5-3960-4a58-9df2-a11b8565a30c/7d8dc65e-86d0-417f-8e44-552ce498052d.jpg?format=500w",
@@ -15,6 +17,11 @@ const Home: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Email sign-up state
+  const [email, setEmail] = useState('');
+  const [signUpStatus, setSignUpStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMsg, setErrorMsg] = useState('');
+
   useEffect(() => {
     setIsLoaded(true);
     const handleScroll = () => setScrollY(window.scrollY);
@@ -28,6 +35,32 @@ const Home: React.FC = () => {
       transform: `perspective(1200px) translateY(${progress * -0.05}px) translateZ(${Math.min(50, progress * 0.1)}px) rotateX(${Math.min(3, progress * 0.005)}deg)`,
       opacity: 1
     };
+  };
+
+  const handleEmailSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setErrorMsg('Please enter a valid email address.');
+      setSignUpStatus('error');
+      return;
+    }
+
+    setSignUpStatus('loading');
+    setErrorMsg('');
+
+    try {
+      await addDoc(collection(db, 'subscribers'), {
+        email: email.toLowerCase().trim(),
+        signedUpAt: serverTimestamp(),
+        source: 'website_footer'
+      });
+      setSignUpStatus('success');
+      setEmail('');
+    } catch (err) {
+      console.error('Firestore sign-up error:', err);
+      setErrorMsg('Something went wrong. Please try again.');
+      setSignUpStatus('error');
+    }
   };
 
   return (
@@ -62,9 +95,9 @@ const Home: React.FC = () => {
               >
                 <span className="relative z-10 flex items-center gap-3">
                   <img
-                  src="https://img.icons8.com/ios11/512/FFFFFF/mac-os.png" 
-                  alt="Apple"
-                  className="w-5 h-5" 
+                    src="https://img.icons8.com/ios11/512/FFFFFF/mac-os.png" 
+                    alt="Apple"
+                    className="w-5 h-5" 
                   /> 
                   BOOK THROUGH OUR APP
                 </span>
@@ -79,7 +112,7 @@ const Home: React.FC = () => {
           </div>
 
           <div className="mt-20 w-full flex justify-center scale-90 md:scale-100">
-             <ThreeDFootball />
+            <ThreeDFootball />
           </div>
         </div>
 
@@ -186,6 +219,50 @@ const Home: React.FC = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* STAY IN THE LOOP — Email Sign-Up */}
+      <section className="py-32 bg-brandBlack border-t border-white/10 px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-brandRed font-black text-xs uppercase tracking-[0.4em] mb-4">NEVER MISS A SESSION</p>
+          <h2 className="text-4xl md:text-6xl font-heading font-black text-white uppercase tracking-tight mb-4">
+            STAY IN THE LOOP
+          </h2>
+          <p className="text-gray-400 font-medium mb-12 text-lg">
+            Get first access to new sessions, camp announcements, and academy updates — straight to your inbox.
+          </p>
+
+          {signUpStatus === 'success' ? (
+            <div className="py-8">
+              <p className="text-3xl font-black text-white uppercase mb-2">YOU'RE IN. 🔥</p>
+              <p className="text-gray-400 font-medium">We'll be in touch soon.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleEmailSignUp} className="flex flex-col sm:flex-row gap-4 justify-center">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (signUpStatus === 'error') setSignUpStatus('idle');
+                }}
+                placeholder="YOUR EMAIL ADDRESS"
+                className="flex-1 px-8 py-5 rounded-full bg-white/5 border border-white/15 text-white placeholder-gray-500 font-bold text-sm tracking-widest focus:outline-none focus:border-brandRed transition-colors"
+              />
+              <button
+                type="submit"
+                disabled={signUpStatus === 'loading'}
+                className="px-10 py-5 bg-brandRed text-white font-black rounded-full hover:scale-105 transition-transform uppercase tracking-widest text-sm shadow-xl disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
+              >
+                {signUpStatus === 'loading' ? 'JOINING...' : 'JOIN UP'}
+              </button>
+            </form>
+          )}
+
+          {signUpStatus === 'error' && (
+            <p className="mt-4 text-brandRed font-bold text-sm">{errorMsg}</p>
+          )}
         </div>
       </section>
 
