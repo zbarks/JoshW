@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reviews</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2rem; max-width: 700px; }
+      .row { display: flex; align-items: center; gap: .5rem; }
+      input, textarea { width: 100%; margin: .5rem 0; padding: .5rem; }
+      textarea { min-height: 100px; }
+      button { padding: .5rem 1rem; }
+      ul { padding: 0; list-style: none; }
+      li { border: 1px solid #ddd; border-radius: 8px; margin: .5rem 0; padding: .75rem; }
+      .badge { background: #0b5; color: #fff; border-radius: 999px; padding: .1rem .5rem; font-size: .75rem; margin-left: .5rem; }
+      .muted { color: #666; }
+      .meta { font-size: .85rem; color: #555; margin-bottom: .25rem; }
+      .status { min-height: 1.25rem; color: #0a7; }
+    </style>
+  </head>
+  <body>
+    <h1>Review Page</h1>
+    <p class="muted">Submit reviews below. Reviews are stored in the server's <code>data.json</code>.</p>
+
+    <label class="row">
+      <input id="internalToggle" type="checkbox" />
+      Internal review option (global)
+    </label>
+
+    <h2>Add review</h2>
+    <input id="reviewAuthor" placeholder="Your name (optional)" />
+    <textarea id="reviewText" placeholder="Write your review..."></textarea>
+    <button id="submitReview">Submit review</button>
+    <p id="status" class="status"></p>
+
+    <h2>All reviews</h2>
+    <ul id="reviewList"></ul>
+
+    <script>
+      const internalToggle = document.getElementById('internalToggle');
+      const reviewAuthor = document.getElementById('reviewAuthor');
+      const reviewText = document.getElementById('reviewText');
+      const submitReview = document.getElementById('submitReview');
+      const reviewList = document.getElementById('reviewList');
+      const statusText = document.getElementById('status');
+
+      function setStatus(message) {
+        statusText.textContent = message || '';
+      }
+
+      async function loadSettings() {
+        const res = await fetch('/api/settings');
+        const settings = await res.json();
+        internalToggle.checked = !!settings.internal_review_enabled;
+      }
+
+      async function saveSettings() {
+        await fetch('/api/settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ internal_review_enabled: internalToggle.checked }),
+        });
+      }
+
+      function formatDate(isoDate) {
+        const d = new Date(isoDate);
+        return Number.isNaN(d.getTime()) ? '' : d.toLocaleString();
+      }
+
+      function renderReviews(reviews) {
+        reviewList.innerHTML = '';
+        reviews.forEach((r) => {
+          const li = document.createElement('li');
+
+          const meta = document.createElement('div');
+          meta.className = 'meta';
+          meta.textContent = `${r.author || 'Anonymous'} • ${formatDate(r.created_at)}`;
+          li.appendChild(meta);
+
+          const body = document.createElement('div');
+          body.textContent = r.text;
+          li.appendChild(body);
+
+          if (r.internal) {
+            const badge = document.createElement('span');
+            badge.className = 'badge';
+            badge.textContent = 'INTERNAL';
+            li.appendChild(badge);
+          }
+
+          reviewList.appendChild(li);
+        });
+      }
+
+      async function loadReviews() {
+        const res = await fetch('/api/reviews');
+        const reviews = await res.json();
+        renderReviews(reviews);
+      }
+
+      internalToggle.addEventListener('change', async () => {
+        await saveSettings();
+        setStatus(`Internal option is now ${internalToggle.checked ? 'ON' : 'OFF'}.`);
+      });
+
+      submitReview.addEventListener('click', async () => {
+        const text = reviewText.value.trim();
+        if (!text) {
+          setStatus('Please enter a review before submitting.');
+          return;
+        }
+
+        const author = reviewAuthor.value.trim();
+        const res = await fetch('/api/reviews', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, author }),
+        });
+
+        if (!res.ok) {
+          setStatus('Failed to save review.');
+          return;
+        }
+
+        reviewText.value = '';
+        setStatus('Review saved successfully.');
+        await loadReviews();
+      });
+
+      (async function init() {
+        await loadSettings();
+        await loadReviews();
+      })();
+    </script>
+  </body>
+</html>
