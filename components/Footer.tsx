@@ -61,7 +61,14 @@ const Footer: React.FC = () => {
 
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-600 font-black uppercase tracking-[0.3em]">
           <p>© 2024 Foot Forward Coaching - Edinburgh football academy</p>
-          <p className="mt-4 md:mt-0">DESIGNED BY BARKER AGENCY.</p>
+          <a 
+  href="https://www.barkeragency.co.uk/" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  className="mt-4 md:mt-0"
+>
+  DESIGNED BY BARKER AGENCY.
+</a>
         </div>
       </div>
     </footer>
