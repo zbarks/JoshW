@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Apple, Menu, X } from 'lucide-react';
@@ -14,6 +13,7 @@ const Navbar: React.FC = () => {
     { name: 'Academy', path: '/academy' },
     { name: 'About Me', path: '/about' },
     { name: 'Reviews', path: '/reviews' },
+    { name: 'Gallery', path: '/gallery' },  // Add this line
     { name: 'Contact', path: '/contact' },
   ];
 
