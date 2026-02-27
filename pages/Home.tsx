@@ -9,7 +9,7 @@ const GALLERY_IMAGES = [
   "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/34ca7568-54c7-4765-84b9-a50bb56c26aa/b7807601-8051-4cb3-851d-10f6628b4bdb.jpg?format=750w",
   "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/1677397183785-G2LHBJ3L99QK0LF6AMFZ/7e6d4829-2f37-4b8f-b5d4-eeedd6267172.jpg?format=750w",
   "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/610f70ad-65d1-47b7-8fc4-6d6ffb7aa63e/85135050-7fb7-4917-80d3-e06f90d5df34.jpg?format=750w",
-  "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/ef4b2ffa-5bc5-4156-8205-23d49e8de408/005a6aa8-a104-4fb3-a15e-7c86e92f634e.jpg?format=750w"
+  "https://i.ibb.co/ksGn9g84/image-1306335.jpg"
 ];
 
 const Home: React.FC = () => {
