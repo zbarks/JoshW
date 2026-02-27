@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -9,6 +8,7 @@ import Academy from './pages/Academy';
 import AboutMe from './pages/AboutMe';
 import Reviews from './pages/Reviews';
 import Contact from './pages/Contact';
+import Gallery from './pages/Gallery';  // Add this import
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -32,6 +32,7 @@ const App: React.FC = () => {
             <Route path="/about" element={<AboutMe />} />
             <Route path="/reviews" element={<Reviews />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/gallery" element={<Gallery />} />  {/* Add this route */}
             <Route path="*" element={<Home />} />
           </Routes>
         </main>
