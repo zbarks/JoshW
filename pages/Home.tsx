@@ -85,7 +85,7 @@ const Home: React.FC = () => {
           
           <div className={`${isLoaded ? 'animate-reveal-up reveal-delay-1' : 'opacity-0'} mt-10 space-y-8`}>
             <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-400 uppercase tracking-[0.2em]">
-              EDINBURGH'S ELITE ACADEMY
+              EDINBURGH'S FOOTBALL ELITE ACADEMY
             </h2>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
@@ -131,7 +131,7 @@ const Home: React.FC = () => {
             <div className="absolute -inset-2 bg-brandRed/10 blur-2xl rounded-[3rem]" />
             <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl bg-charcoal/50">
               <img 
-                src="https://i2-prod.edinburghlive.co.uk/article16862634.ece/ALTERNATES/s1200c/0_19224168.jpg" 
+                src="https://c8.alamy.com/comp/JDXXBB/josh-walker-middlesbrough-fc-riverside-stadium-middlesbrough-england-JDXXBB.jpg" 
                 alt="Josh Walker" 
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
               />
