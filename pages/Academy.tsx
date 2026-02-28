@@ -1,14 +1,39 @@
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, Clock, MapPin, Users, Smartphone } from 'lucide-react';
 
 const Academy: React.FC = () => {
+  // App store detection
+  const [appStoreUrl, setAppStoreUrl] = useState('');
+  const [isAndroid, setIsAndroid] = useState(false);
+  const [platformText, setPlatformText] = useState('iOS / App Store');
+
+  useEffect(() => {
+    // Detect device and set appropriate app store link
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      // iOS device
+      setAppStoreUrl('https://apps.apple.com/th/app/foot-forward-coaching/id6443740570');
+      setIsAndroid(false);
+      setPlatformText('iOS / App Store');
+    } else if (/android/.test(userAgent)) {
+      // Android device
+      setAppStoreUrl('https://play.google.com/store/apps/details?id=app.activitypro.footforwardcoaching&hl=en_GB');
+      setIsAndroid(true);
+      setPlatformText('Android / Google Play');
+    } else {
+      // Desktop or other - default to iOS
+      setAppStoreUrl('https://apps.apple.com/th/app/foot-forward-coaching/id6443740570');
+      setIsAndroid(false);
+      setPlatformText('iOS / Android');
+    }
+  }, []);
+
   return (
     <div className="pt-24 bg-brandBlack">
       <section className="py-20 bg-brandBlack text-center px-4">
         <h1 className="font-heading font-black text-5xl md:text-7xl mb-8 uppercase italic">Academy</h1>
         <p className="max-w-3xl mx-auto text-xl text-gray-400 leading-relaxed font-bold">
-          Elite level coaching. Structured for development. Exclusively managed via our app.
+          Elite level coaching. Weekly membership camps. Exclusively managed via our app.
         </p>
       </section>
 
@@ -16,16 +41,32 @@ const Academy: React.FC = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Info */}
           <div className="lg:col-span-2 space-y-12">
-            <div className="bg-gray-50 p-8 rounded-3xl border-2 border-dashed border-gray-200">
+            {/* Weekly Membership Info */}
+            <div className="bg-brandRed/5 p-8 rounded-3xl border-2 border-brandRed/20">
               <h2 className="text-3xl font-black mb-6 flex items-center gap-3 uppercase italic">
-                <Smartphone className="text-brandRed" /> App-Based Scheduling
+                <Calendar className="text-brandRed" /> Weekly Membership Camps
               </h2>
               <p className="text-lg text-gray-700 leading-relaxed mb-6 font-medium">
-                To ensure our players have access to the most up-to-date schedules, session availability, and personalized coaching feedback, all Foot Forward sessions are now managed exclusively through our mobile app.
+                Join our elite academy through a <strong>weekly membership subscription</strong>. Train consistently with Josh every week, developing your skills through structured, progressive sessions designed for long-term development.
               </p>
               <ul className="space-y-4 text-gray-600 font-bold">
-                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-brandRed rounded-full"></div> Real-time session booking</li>
-                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-brandRed rounded-full"></div> Instant availability updates</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-brandRed rounded-full"></div> Regular weekly training sessions</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-brandRed rounded-full"></div> Flexible membership subscriptions</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-brandRed rounded-full"></div> Age-appropriate group coaching</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-brandRed rounded-full"></div> Continuous skill progression tracking</li>
+              </ul>
+            </div>
+
+            <div className="bg-gray-50 p-8 rounded-3xl border-2 border-dashed border-gray-200">
+              <h2 className="text-3xl font-black mb-6 flex items-center gap-3 uppercase italic">
+                <Smartphone className="text-brandRed" /> App-Based Membership
+              </h2>
+              <p className="text-lg text-gray-700 leading-relaxed mb-6 font-medium">
+                All membership subscriptions, weekly camp bookings, and coaching feedback are managed exclusively through our mobile app. Stay connected with your training schedule and track your progress.
+              </p>
+              <ul className="space-y-4 text-gray-600 font-bold">
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-brandRed rounded-full"></div> Easy subscription management</li>
+                <li className="flex items-center gap-3"><div className="w-2 h-2 bg-brandRed rounded-full"></div> Real-time weekly camp schedules</li>
                 <li className="flex items-center gap-3"><div className="w-2 h-2 bg-brandRed rounded-full"></div> Direct communication with Josh</li>
                 <li className="flex items-center gap-3"><div className="w-2 h-2 bg-brandRed rounded-full"></div> Training resources and drills</li>
               </ul>
@@ -62,7 +103,7 @@ const Academy: React.FC = () => {
             <div className="sticky top-32 p-8 bg-brandBlack text-white rounded-3xl shadow-2xl border border-white/5">
               <h3 className="text-2xl font-black mb-6 uppercase italic text-brandRed">Join the Academy</h3>
               <p className="text-gray-400 mb-8 font-bold">
-                Elite pathways start here. Download the app to check availability and secure your spot at George Watson's.
+                Subscribe to weekly membership camps. Download the app to view schedules, manage your subscription, and secure your spot at George Watson's.
               </p>
               
               <div className="space-y-6 mb-8">
@@ -72,7 +113,16 @@ const Academy: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 uppercase font-bold tracking-widest">Platform</p>
-                    <p className="font-black text-lg">iOS / App Store</p>
+                    <p className="font-black text-lg">{platformText}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center">
+                    <Calendar className="text-brandRed" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 uppercase font-bold tracking-widest">Schedule</p>
+                    <p className="font-black text-lg">Weekly Camps</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -80,8 +130,8 @@ const Academy: React.FC = () => {
                     <Clock className="text-brandRed" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 uppercase font-bold tracking-widest">Availability</p>
-                    <p className="font-black text-lg">Check App Live</p>
+                    <p className="text-sm text-gray-500 uppercase font-bold tracking-widest">Membership</p>
+                    <p className="font-black text-lg">Subscription Based</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -96,12 +146,28 @@ const Academy: React.FC = () => {
               </div>
 
               <a 
-                href="https://apps.apple.com/th/app/foot-forward-coaching/id6443740570"
-                className="block w-full text-center bg-brandRed text-white py-5 rounded-xl font-black hover:bg-white hover:text-brandBlack transition-all uppercase italic tracking-widest"
+                href={appStoreUrl}
+                className="block w-full text-center bg-brandRed text-white py-5 rounded-xl font-black hover:bg-white hover:text-brandBlack transition-all uppercase italic tracking-widest flex items-center justify-center gap-2"
               >
-                DOWNLOAD APP TO BOOK
+                {isAndroid ? (
+                  <>
+                    <img 
+                      src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_Play_2022_icon.svg/960px-Google_Play_2022_icon.svg.png" 
+                      alt="Google Play"
+                      className="w-5 h-5"
+                    />
+                    DOWNLOAD APP
+                  </>
+                ) : (
+                  <>
+                    <Smartphone className="w-5 h-5" />
+                    DOWNLOAD APP
+                  </>
+                )}
               </a>
-              <p className="text-center text-[10px] text-gray-500 mt-4 uppercase font-bold tracking-widest">Available on the App Store</p>
+              <p className="text-center text-[10px] text-gray-500 mt-4 uppercase font-bold tracking-widest">
+                {isAndroid ? 'Available on Google Play' : 'Available on the App Store'}
+              </p>
             </div>
           </div>
         </div>

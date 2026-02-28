@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Apple, Menu, X } from 'lucide-react';
 
@@ -7,13 +7,35 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const logoUrl = "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/9051e63e-e492-4263-8522-45cd791b967c/d98634da-d16b-4742-a66d-f153c34045c6__2_-removebg-preview.png?format=1500w";
 
+  // App store detection
+  const [appStoreUrl, setAppStoreUrl] = useState('');
+  const [isAndroid, setIsAndroid] = useState(false);
+
+  useEffect(() => {
+    // Detect device and set appropriate app store link
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      // iOS device
+      setAppStoreUrl('https://apps.apple.com/th/app/foot-forward-coaching/id6443740570');
+      setIsAndroid(false);
+    } else if (/android/.test(userAgent)) {
+      // Android device
+      setAppStoreUrl('https://play.google.com/store/apps/details?id=app.activitypro.footforwardcoaching&hl=en_GB');
+      setIsAndroid(true);
+    } else {
+      // Desktop or other - default to iOS
+      setAppStoreUrl('https://apps.apple.com/th/app/foot-forward-coaching/id6443740570');
+      setIsAndroid(false);
+    }
+  }, []);
+
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'What We Do', path: '/what-we-do' },
     { name: 'Academy', path: '/academy' },
     { name: 'About Me', path: '/about' },
     { name: 'Reviews', path: '/reviews' },
-    { name: 'Gallery', path: '/gallery' },  // Add this line
+    { name: 'Gallery', path: '/gallery' },
     { name: 'Contact', path: '/contact' },
   ];
 
@@ -43,12 +65,20 @@ const Navbar: React.FC = () => {
               </Link>
             ))}
             <a 
-              href="https://apps.apple.com/th/app/foot-forward-coaching/id6443740570" 
+              href={appStoreUrl}
               target="_blank" 
               rel="noopener noreferrer"
               className="flex items-center px-6 py-3 text-sm font-black uppercase tracking-widest bg-brandRed text-white rounded-full hover:bg-white hover:text-brandBlack transition-all italic"
             >
-              <Apple className="mr-2 w-4 h-4" />
+              {isAndroid ? (
+                <img 
+                  src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_Play_2022_icon.svg/960px-Google_Play_2022_icon.svg.png" 
+                  alt="Google Play"
+                  className="mr-2 w-4 h-4"
+                />
+              ) : (
+                <Apple className="mr-2 w-4 h-4" />
+              )}
               APP
             </a>
           </div>
@@ -81,10 +111,23 @@ const Navbar: React.FC = () => {
             </Link>
           ))}
           <a 
-            href="https://apps.apple.com/th/app/foot-forward-coaching/id6443740570" 
+            href={appStoreUrl}
             className="flex items-center justify-center py-4 bg-brandRed text-white rounded-xl font-black italic uppercase tracking-widest"
           >
-            <Apple className="mr-2" /> DOWNLOAD APP
+            {isAndroid ? (
+              <>
+                <img 
+                  src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_Play_2022_icon.svg/960px-Google_Play_2022_icon.svg.png" 
+                  alt="Google Play"
+                  className="mr-2 w-5 h-5"
+                />
+                DOWNLOAD APP
+              </>
+            ) : (
+              <>
+                <Apple className="mr-2" /> DOWNLOAD APP
+              </>
+            )}
           </a>
         </div>
       )}
