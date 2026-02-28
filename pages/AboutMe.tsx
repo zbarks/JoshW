@@ -2,7 +2,7 @@
 import React from 'react';
 
 const AboutMe: React.FC = () => {
-  const portraitUrl = "https://i2-prod.edinburghlive.co.uk/article16862634.ece/ALTERNATES/s1200c/0_19224168.jpg";
+  const portraitUrl = "https://c8.alamy.com/comp/JDXXBB/josh-walker-middlesbrough-fc-riverside-stadium-middlesbrough-england-JDXXBB.jpg";
 
   return (
     <div className="pt-24 bg-brandBlack">
