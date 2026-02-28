@@ -22,10 +22,35 @@ const Home: React.FC = () => {
   const [signUpStatus, setSignUpStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
+  // App store detection
+  const [appStoreUrl, setAppStoreUrl] = useState('');
+  const [appStoreLogo, setAppStoreLogo] = useState('');
+  const [appStoreText, setAppStoreText] = useState('BOOK THROUGH OUR APP');
+
   useEffect(() => {
     setIsLoaded(true);
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Detect device and set appropriate app store link
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      // iOS device
+      setAppStoreUrl('https://apps.apple.com/th/app/foot-forward-coaching/id6443740570');
+      setAppStoreLogo('https://img.icons8.com/ios-filled/512/FFFFFF/mac-os.png');
+      setAppStoreText('DOWNLOAD ON APP STORE');
+    } else if (/android/.test(userAgent)) {
+      // Android device
+      setAppStoreUrl('https://play.google.com/store/apps/details?id=app.activitypro.footforwardcoaching&hl=en_GB');
+      setAppStoreLogo('http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_Play_2022_icon.svg/960px-Google_Play_2022_icon.svg.png');
+      setAppStoreText('GET IT ON GOOGLE PLAY');
+    } else {
+      // Desktop or other - default to iOS
+      setAppStoreUrl('https://apps.apple.com/th/app/foot-forward-coaching/id6443740570');
+      setAppStoreLogo('https://img.icons8.com/ios-filled/512/FFFFFF/mac-os.png');
+      setAppStoreText('BOOK THROUGH OUR APP');
+    }
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -90,16 +115,16 @@ const Home: React.FC = () => {
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
               <a 
-                href="https://apps.apple.com/th/app/foot-forward-coaching/id6443740570" 
+                href={appStoreUrl}
                 className="group relative px-10 py-5 bg-brandRed text-white font-black rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(238,29,35,0.4)] uppercase tracking-wider text-sm sm:text-base"
               >
                 <span className="relative z-10 flex items-center gap-3">
                   <img
-                    src="https://img.icons8.com/ios11/512/FFFFFF/mac-os.png" 
-                    alt="Apple"
+                    src={appStoreLogo}
+                    alt="App Store"
                     className="w-5 h-5" 
                   /> 
-                  BOOK THROUGH OUR APP
+                  {appStoreText}
                 </span>
               </a>
               <a 
@@ -274,7 +299,7 @@ const Home: React.FC = () => {
           </h2>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <a 
-              href="https://apps.apple.com/th/app/foot-forward-coaching/id6443740570" 
+              href={appStoreUrl}
               className="px-12 py-6 bg-brandRed text-white font-black rounded-full hover:scale-105 transition-transform uppercase tracking-widest text-base shadow-xl"
             >
               DOWNLOAD APP
