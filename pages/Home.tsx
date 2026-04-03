@@ -3,6 +3,11 @@ import { ArrowDown, MapPin, Smartphone, Users } from 'lucide-react';
 import ThreeDFootball from '../components/ThreeDFootball';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase/config';
+declare global {
+  interface Window {
+    fbq: any;
+  }
+}
 
 const GALLERY_IMAGES = [
   "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/d48238f5-3960-4a58-9df2-a11b8565a30c/7d8dc65e-86d0-417f-8e44-552ce498052d.jpg?format=500w",
@@ -31,6 +36,24 @@ const Home: React.FC = () => {
     setIsLoaded(true);
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll, { passive: true });
+
+    const handleAppDownloadClick = (e: React.MouseEvent) => {
+  e.preventDefault();
+  
+  // Fire the Meta Pixel event
+  if (window.fbq) {
+    window.fbq('trackCustom', 'AppDownloadClick', { 
+      platform: appStoreText,
+      url: appStoreUrl 
+    });
+  }
+
+  // 300ms delay to ensure the event sends before the redirect
+  setTimeout(() => {
+    window.location.href = appStoreUrl;
+  }, 300);
+};
+
 
     // Detect device and set appropriate app store link
     const userAgent = navigator.userAgent.toLowerCase();
@@ -116,6 +139,7 @@ const Home: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
               <a 
                 href={appStoreUrl}
+                onClick={handleAppDownloadClick
                 className="group relative px-10 py-5 bg-brandRed text-white font-black rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(238,29,35,0.4)] uppercase tracking-wider text-sm sm:text-base"
               >
                 <span className="relative z-10 flex items-center gap-3">
