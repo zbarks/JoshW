@@ -139,7 +139,7 @@ const Home: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
               <a 
                 href={appStoreUrl}
-                onClick={handleAppDownloadClick
+                onClick={handleAppDownloadClick}
                 className="group relative px-10 py-5 bg-brandRed text-white font-black rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(238,29,35,0.4)] uppercase tracking-wider text-sm sm:text-base"
               >
                 <span className="relative z-10 flex items-center gap-3">
