@@ -40,19 +40,28 @@ const Home: React.FC = () => {
     const handleAppDownloadClick = (e: React.MouseEvent) => {
   e.preventDefault();
   
-  // ✅ The "if" statement that stops the black screen crash
-  if (typeof window !== 'undefined' && window.fbq) {
-    window.fbq('trackCustom', 'AppDownloadClick', { 
-      platform: appStoreText 
-    });
-  }
-
-  // Redirect after a tiny delay
-  setTimeout(() => {
-    window.location.href = appStoreUrl;
-  }, 300);
+ const handleAppDownloadClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('trackCustom', 'AppDownloadClick');
+    }
+    setTimeout(() => {
+      window.location.href = appStoreUrl;
+    }, 300);
+  };
+return (
+    <div className="bg-brandBlack">
+       {/* ... existing code ... */}
+       <a 
+         href={appStoreUrl}
+         onClick={handleAppDownloadClick} // Now it can find the function!
+         className="..."
+       >
+         {/* ... */}
+       </a>
+    </div>
+  );
 };
-
 
 
     // Detect device and set appropriate app store link
