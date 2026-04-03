@@ -40,19 +40,19 @@ const Home: React.FC = () => {
     const handleAppDownloadClick = (e: React.MouseEvent) => {
   e.preventDefault();
   
-  // Fire the Meta Pixel event
-  if (window.fbq) {
+  // ✅ The "if" statement that stops the black screen crash
+  if (typeof window !== 'undefined' && window.fbq) {
     window.fbq('trackCustom', 'AppDownloadClick', { 
-      platform: appStoreText,
-      url: appStoreUrl 
+      platform: appStoreText 
     });
   }
 
-  // 300ms delay to ensure the event sends before the redirect
+  // Redirect after a tiny delay
   setTimeout(() => {
     window.location.href = appStoreUrl;
   }, 300);
 };
+
 
 
     // Detect device and set appropriate app store link
