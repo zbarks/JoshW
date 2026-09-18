@@ -2,7 +2,7 @@ import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, CalendarCheck, Users } from 'lucide-react';
 import { SITE } from '../config/site';
-import { AppButton, BookButton } from '../components/BookLinks';
+import { BookButton } from '../components/BookLinks';
 
 const ThreeDFootball = lazy(() => import('../components/ThreeDFootball'));
 
@@ -16,7 +16,7 @@ const GALLERY_IMAGES = [
 
 const features = [
   { icon: MapPin, title: 'Top astro', desc: "Premium facilities at George Watson's College." },
-  { icon: CalendarCheck, title: 'Easy booking', desc: 'Book online, with scheduling and pro feedback via our app.' },
+  { icon: CalendarCheck, title: 'Easy booking', desc: 'Book your place online in a few clicks.' },
   { icon: Users, title: 'Groups', desc: 'Structured age-appropriate elite training.' },
 ];
 
@@ -90,11 +90,8 @@ const Home: React.FC = () => {
 
           <div className="mt-10 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row [animation-delay:150ms] animate-reveal-up">
             <BookButton where="hero" className="btn-primary w-full px-9 py-4 text-base sm:w-auto" />
-            <AppButton where="hero" className="btn-secondary w-full py-4 sm:w-auto" />
+            <a href="#bio" className="btn-secondary w-full py-4 sm:w-auto">Meet Josh</a>
           </div>
-          <a href="#bio" className="mt-6 text-sm font-medium text-neutral-400 underline-offset-4 hover:text-white hover:underline">
-            Meet Josh
-          </a>
         </div>
       </section>
 

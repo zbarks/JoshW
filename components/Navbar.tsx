@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { SITE } from '../config/site';
-import { AppButton, BookButton } from './BookLinks';
+import { BookButton } from './BookLinks';
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -46,7 +46,6 @@ const Navbar: React.FC = () => {
         </ul>
 
         <div className="flex items-center gap-2">
-          <AppButton where="nav" icon={false} className="hidden px-3 py-2 text-sm font-medium text-neutral-400 hover:text-white xl:inline-flex" />
           <BookButton where="nav" className="btn-primary px-5 py-2.5 text-xs sm:text-sm" icon={false}>
             <span className="sm:hidden">Book</span>
             <span className="hidden sm:inline">Book a session</span>
@@ -81,7 +80,6 @@ const Navbar: React.FC = () => {
           </ul>
           <div className="mt-6 grid gap-3">
             <BookButton where="mobile-menu" className="btn-primary w-full py-4" />
-            <AppButton where="mobile-menu" className="btn-secondary w-full py-4" />
           </div>
         </div>
       )}

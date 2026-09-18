@@ -1,13 +1,11 @@
 // Single source of truth for links and business details.
 // Anything used in more than one place lives here.
 
-// PRIMARY BOOKING LINK
-// Paste the booking URL between the quotes. Every "Book a session" button on the
-// site uses this. While it is empty, the buttons fall back to the app store link.
+// BOOKING LINKS (TeamFeePay). All bookings go through these.
+// Main "Book a session" buttons across the site:
 export const BOOKING_URL = 'https://app.teamfeepay.com/foot-forward-coaching/store/3579';
-
-export const APP_STORE_URL = 'https://apps.apple.com/gb/app/foot-forward-coaching/id6443740570';
-export const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=app.activitypro.footforwardcoaching&hl=en_GB';
+// Buttons on the Academy page (weekly membership camps):
+export const ACADEMY_BOOKING_URL = 'https://app.teamfeepay.com/s/MiJvo2cp7G';
 
 export const SITE = {
   name: 'Foot Forward Edinburgh',
@@ -29,17 +27,3 @@ export const SITE = {
     facebook: '',
   },
 };
-
-export type Platform = 'ios' | 'android' | 'desktop';
-
-export const detectPlatform = (): Platform => {
-  if (typeof navigator === 'undefined') return 'desktop';
-  const ua = navigator.userAgent.toLowerCase();
-  if (/iphone|ipad|ipod/.test(ua)) return 'ios';
-  if (/android/.test(ua)) return 'android';
-  return 'desktop';
-};
-
-export const appUrlFor = (p: Platform) => (p === 'android' ? PLAY_STORE_URL : APP_STORE_URL);
-
-export const bookingHref = (p: Platform) => BOOKING_URL || appUrlFor(p);

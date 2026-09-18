@@ -27,7 +27,7 @@ export const ROUTES: RouteSeo[] = [
 <h1>Foot Forward Edinburgh: Edinburgh's elite football academy</h1>
 <p>From England Youth International to over a decade in professional football. Josh Walker brings a unique blend of high-level experience and UEFA-certified technical coaching to Edinburgh's youth.</p>
 <h2>The academy</h2>
-<ul><li>Top astro: premium facilities at George Watson's College.</li><li>Easy booking: book sessions online, with scheduling and pro feedback via our app.</li><li>Groups: structured, age-appropriate elite training.</li></ul>
+<ul><li>Top astro: premium facilities at George Watson's College.</li><li>Easy booking: book your place online in a few clicks.</li><li>Groups: structured, age-appropriate elite training.</li></ul>
 <p><a href="/academy">Book a weekly camp</a></p>${contact}`,
   },
   {
@@ -51,7 +51,7 @@ export const ROUTES: RouteSeo[] = [
       "Join Foot Forward's weekly membership football camps on the Top Astro at George Watson's College, Edinburgh. Age-appropriate group coaching. Book online.",
     body: `${nav}
 <h1>Academy: weekly membership football camps in Edinburgh</h1>
-<p>Elite level coaching. Weekly membership camps. Book online or through our app.</p>
+<p>Elite level coaching. Weekly membership camps. Book your place online.</p>
 <p>Join our elite academy through a weekly membership subscription. Train consistently with Josh every week, developing your skills through structured, progressive sessions designed for long-term development.</p>
 <h2>Training location</h2><p>George Watson's College, Top Astro Pitch, Colinton Rd, Edinburgh EH10 5EG.</p>
 <h2>Frequently asked questions</h2>

@@ -9,7 +9,7 @@ npm run dev
 ```
 
 ## Where to change things
-- **Booking link, app links, phone, email, socials:** `config/site.ts`. Paste the booking URL into `BOOKING_URL`; every "Book a session" button uses it.
+- **Booking links, phone, email, socials:** `config/site.ts`. `BOOKING_URL` is used by the main "Book a session" buttons; `ACADEMY_BOOKING_URL` by the buttons on the Academy page.
 - **Page titles and Google/AI descriptions:** `seo/routes.ts`
 - **Academy FAQs** (shown on the page and sent to Google as FAQ data): `seo/faqs.ts`
 - **Business details for Google (schema.org):** the JSON-LD block in `index.html`

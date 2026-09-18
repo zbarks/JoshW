@@ -1,7 +1,6 @@
 import React from 'react';
-import { Calendar, Clock, MapPin, Users, Smartphone } from 'lucide-react';
-import { AppButton, BookButton } from '../components/BookLinks';
-import { usePlatform } from '../components/usePlatform';
+import { Calendar, Clock, MapPin, Users } from 'lucide-react';
+import { BookButton } from '../components/BookLinks';
 import { FAQS } from '../seo/faqs';
 
 const Bullet: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -12,8 +11,6 @@ const Bullet: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 const Academy: React.FC = () => {
-  const { storeName } = usePlatform();
-
   const facts = [
     { icon: Calendar, label: 'Schedule', value: 'Weekly camps' },
     { icon: Clock, label: 'Membership', value: 'Subscription based' },
@@ -27,9 +24,9 @@ const Academy: React.FC = () => {
         <div className="container-page">
           <h1 className="display mb-6 text-5xl text-white md:text-7xl">Academy</h1>
           <p className="mb-10 max-w-2xl text-xl leading-relaxed text-neutral-300">
-            Elite level coaching. Weekly membership camps. Book online or through our app.
+            Elite level coaching. Weekly membership camps. Book your place online.
           </p>
-          <BookButton where="academy-hero" className="btn-primary px-9 py-4 text-base" />
+          <BookButton where="academy-hero" link="academy" className="btn-primary px-9 py-4 text-base" />
         </div>
       </section>
 
@@ -47,22 +44,7 @@ const Academy: React.FC = () => {
                 <Bullet>Age-appropriate group coaching</Bullet>
                 <Bullet>Continuous skill progression tracking</Bullet>
               </ul>
-            </div>
-
-            <div className="border-t border-neutral-200 pt-12">
-              <h2 className="mb-5 flex items-center gap-3 font-heading text-3xl font-extrabold uppercase">
-                <Smartphone className="text-brandRed" aria-hidden /> The app
-              </h2>
-              <p className="mb-6 text-lg leading-relaxed text-neutral-700">
-                Membership subscriptions and coaching feedback are managed through our mobile app. Stay connected with your training schedule and track your progress.
-              </p>
-              <ul className="mb-8 grid gap-3 text-neutral-700 sm:grid-cols-2">
-                <Bullet>Easy subscription management</Bullet>
-                <Bullet>Real-time weekly camp schedules</Bullet>
-                <Bullet>Direct communication with Josh</Bullet>
-                <Bullet>Training resources and drills</Bullet>
-              </ul>
-              <AppButton where="academy-app" className="btn-secondary-dark" />
+              <BookButton where="academy-membership" link="academy" className="btn-primary mt-8" />
             </div>
 
             <div className="border-t border-neutral-200 pt-12">
@@ -116,10 +98,7 @@ const Academy: React.FC = () => {
                   </div>
                 ))}
               </dl>
-              <BookButton where="academy-panel" className="btn-primary w-full py-4 text-base" />
-              <AppButton where="academy-panel" icon={false} className="mt-4 block text-center text-sm text-neutral-400 underline-offset-4 hover:text-white hover:underline">
-                Or download the app from {storeName}
-              </AppButton>
+              <BookButton where="academy-panel" link="academy" className="btn-primary w-full py-4 text-base" />
             </div>
           </aside>
         </div>

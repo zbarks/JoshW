@@ -1,25 +1,29 @@
 import React from 'react';
-import { CalendarCheck, Smartphone } from 'lucide-react';
-import { usePlatform, trackApp, trackBooking } from './usePlatform';
+import { CalendarCheck } from 'lucide-react';
+import { ACADEMY_BOOKING_URL, BOOKING_URL } from '../config/site';
 
-interface Props { where: string; className?: string; children?: React.ReactNode; icon?: boolean }
+declare global {
+  interface Window { fbq?: (...args: any[]) => void }
+}
 
-export const BookButton: React.FC<Props> = ({ where, className = 'btn-primary', children, icon = true }) => {
-  const { bookUrl } = usePlatform();
-  return (
-    <a href={bookUrl} target="_blank" rel="noopener" onClick={() => trackBooking(where)} className={className}>
-      {icon && <CalendarCheck size={18} aria-hidden />}
-      {children ?? 'Book a session'}
-    </a>
-  );
-};
+interface Props {
+  where: string;
+  className?: string;
+  children?: React.ReactNode;
+  icon?: boolean;
+  // 'academy' sends people to the Academy membership booking page
+  link?: 'main' | 'academy';
+}
 
-export const AppButton: React.FC<Props> = ({ where, className = 'btn-secondary', children, icon = true }) => {
-  const { appUrl } = usePlatform();
-  return (
-    <a href={appUrl} target="_blank" rel="noopener" onClick={() => trackApp(where)} className={className}>
-      {icon && <Smartphone size={18} aria-hidden />}
-      {children ?? 'Get the app'}
-    </a>
-  );
-};
+export const BookButton: React.FC<Props> = ({ where, className = 'btn-primary', children, icon = true, link = 'main' }) => (
+  <a
+    href={link === 'academy' ? ACADEMY_BOOKING_URL : BOOKING_URL}
+    target="_blank"
+    rel="noopener"
+    onClick={() => window.fbq?.('trackCustom', 'BookSessionClick', { where, link })}
+    className={className}
+  >
+    {icon && <CalendarCheck size={18} aria-hidden />}
+    {children ?? 'Book a session'}
+  </a>
+);

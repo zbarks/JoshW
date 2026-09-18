@@ -11,7 +11,7 @@ export const FAQS = [
   },
   {
     q: 'How do I book?',
-    a: 'Use the Book a session button on this website, which takes you to our booking page on TeamFeePay. Memberships and coaching feedback are managed through the Foot Forward Coaching app on iOS and Android.',
+    a: 'All bookings are made online through our booking page on TeamFeePay. Use the Book a session button on this website to choose your session and secure your place.',
   },
   {
     q: 'How does membership work?',
