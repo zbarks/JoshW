@@ -1,137 +1,91 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Apple, Menu, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
+import { SITE } from '../config/site';
+import { AppButton, BookButton } from './BookLinks';
+
+const navLinks = [
+  { name: 'Home', path: '/' },
+  { name: 'What We Do', path: '/what-we-do' },
+  { name: 'Academy', path: '/academy' },
+  { name: 'About Me', path: '/about' },
+  { name: 'Reviews', path: '/reviews' },
+  { name: 'Gallery', path: '/gallery' },
+  { name: 'Contact', path: '/contact' },
+];
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-  const logoUrl = "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/9051e63e-e492-4263-8522-45cd791b967c/d98634da-d16b-4742-a66d-f153c34045c6__2_-removebg-preview.png?format=1500w";
+  const { pathname } = useLocation();
 
-  // App store detection
-  const [appStoreUrl, setAppStoreUrl] = useState('');
-  const [isAndroid, setIsAndroid] = useState(false);
-
-  useEffect(() => {
-    // Detect device and set appropriate app store link
-    const userAgent = navigator.userAgent.toLowerCase();
-    if (/iphone|ipad|ipod/.test(userAgent)) {
-      // iOS device
-      setAppStoreUrl('https://apps.apple.com/th/app/foot-forward-coaching/id6443740570');
-      setIsAndroid(false);
-    } else if (/android/.test(userAgent)) {
-      // Android device
-      setAppStoreUrl('https://play.google.com/store/apps/details?id=app.activitypro.footforwardcoaching&hl=en_GB');
-      setIsAndroid(true);
-    } else {
-      // Desktop or other - default to iOS
-      setAppStoreUrl('https://apps.apple.com/th/app/foot-forward-coaching/id6443740570');
-      setIsAndroid(false);
-    }
-  }, []);
-
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'What We Do', path: '/what-we-do' },
-    { name: 'Academy', path: '/academy' },
-    { name: 'About Me', path: '/about' },
-    { name: 'Reviews', path: '/reviews' },
-    { name: 'Gallery', path: '/gallery' },
-    { name: 'Contact', path: '/contact' },
-  ];
+  useEffect(() => setIsOpen(false), [pathname]);
 
   return (
-    <nav className="sticky top-0 z-50 bg-brandBlack/95 backdrop-blur-md border-b border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-24">
-          <Link to="/" className="flex items-center">
-            <img 
-              src={logoUrl} 
-              alt="Foot Forward Edinburgh Logo" 
-              className="h-16 sm:h-20 w-auto object-contain"
-            />
-          </Link>
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-brandBlack/90 backdrop-blur-md">
+      <nav className="mx-auto flex h-[72px] max-w-6xl items-center justify-between gap-6 px-5" aria-label="Main">
+        <Link to="/" className="shrink-0" aria-label="Foot Forward Edinburgh home">
+          <img src={SITE.logo} alt="Foot Forward Edinburgh" width={120} height={48} className="h-11 w-auto object-contain" />
+        </Link>
 
-          {/* Desktop Links */}
-          <div className="hidden lg:flex items-center space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
+        <ul className="hidden items-center gap-7 lg:flex">
+          {navLinks.map((link) => (
+            <li key={link.path}>
+              <NavLink
                 to={link.path}
-                className={`text-xs font-black uppercase tracking-widest italic transition-colors ${
-                  location.pathname === link.path ? 'text-brandRed' : 'text-gray-400 hover:text-white'
-                }`}
+                end
+                className={({ isActive }) =>
+                  `relative py-2 text-sm font-medium transition-colors ${
+                    isActive ? 'text-white after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:bg-brandRed' : 'text-neutral-400 hover:text-white'
+                  }`
+                }
               >
                 {link.name}
-              </Link>
-            ))}
-            <a 
-              href={appStoreUrl}
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="flex items-center px-6 py-3 text-sm font-black uppercase tracking-widest bg-brandRed text-white rounded-full hover:bg-white hover:text-brandBlack transition-all italic"
-            >
-              {isAndroid ? (
-                <img 
-                  src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_Play_2022_icon.svg/960px-Google_Play_2022_icon.svg.png" 
-                  alt="Google Play"
-                  className="mr-2 w-4 h-4"
-                />
-              ) : (
-                <Apple className="mr-2 w-4 h-4" />
-              )}
-              APP
-            </a>
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <div className="lg:hidden">
-            <button 
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-white p-2"
-            >
-              {isOpen ? <X size={32} /> : <Menu size={32} />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="lg:hidden absolute top-24 left-0 w-full bg-brandBlack border-b border-white/5 py-8 px-4 flex flex-col space-y-6 animate-in slide-in-from-top duration-300">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.path}
-              onClick={() => setIsOpen(false)}
-              className={`text-2xl font-black uppercase tracking-tighter italic ${
-                location.pathname === link.path ? 'text-brandRed' : 'text-white'
-              }`}
-            >
-              {link.name}
-            </Link>
+              </NavLink>
+            </li>
           ))}
-          <a 
-            href={appStoreUrl}
-            className="flex items-center justify-center py-4 bg-brandRed text-white rounded-xl font-black italic uppercase tracking-widest"
+        </ul>
+
+        <div className="flex items-center gap-2">
+          <AppButton where="nav" icon={false} className="hidden px-3 py-2 text-sm font-medium text-neutral-400 hover:text-white xl:inline-flex" />
+          <BookButton where="nav" className="btn-primary px-5 py-2.5 text-xs sm:text-sm" icon={false}>
+            <span className="sm:hidden">Book</span>
+            <span className="hidden sm:inline">Book a session</span>
+          </BookButton>
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="-mr-2 p-2 text-white lg:hidden"
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isOpen}
           >
-            {isAndroid ? (
-              <>
-                <img 
-                  src="http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_Play_2022_icon.svg/960px-Google_Play_2022_icon.svg.png" 
-                  alt="Google Play"
-                  className="mr-2 w-5 h-5"
-                />
-                DOWNLOAD APP
-              </>
-            ) : (
-              <>
-                <Apple className="mr-2" /> DOWNLOAD APP
-              </>
-            )}
-          </a>
+            {isOpen ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
+      </nav>
+
+      {isOpen && (
+        <div className="absolute inset-x-0 top-[72px] border-b border-white/10 bg-brandBlack px-5 pb-8 pt-4 lg:hidden">
+          <ul className="flex flex-col">
+            {navLinks.map((link) => (
+              <li key={link.path}>
+                <NavLink
+                  to={link.path}
+                  end
+                  className={({ isActive }) =>
+                    `block border-b border-white/5 py-4 font-heading text-lg font-bold ${isActive ? 'text-brandRed' : 'text-white'}`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-6 grid gap-3">
+            <BookButton where="mobile-menu" className="btn-primary w-full py-4" />
+            <AppButton where="mobile-menu" className="btn-secondary w-full py-4" />
+          </div>
         </div>
       )}
-    </nav>
+    </header>
   );
 };
 

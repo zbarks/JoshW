@@ -1,108 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Foot Forward Edinburgh | Leading Football Academy</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              brandBlack: '#000000',
-              brandRed: '#EE1D23',
-              charcoal: '#1A1A1A',
-            },
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              heading: ['Montserrat', 'sans-serif'],
-              accent: ['Poppins', 'sans-serif'],
-            },
-            animation: {
-              'reveal-up': 'revealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-              'fade-in': 'fadeIn 1s ease-out forwards',
-            }
-          }
+    <title>Foot Forward Edinburgh | Football Academy & Coaching with Josh Walker</title>
+    <meta name="description" content="Edinburgh's elite football academy. Weekly youth football camps at George Watson's College, coached by former England Youth International and UEFA licensed coach Josh Walker." />
+    <link rel="canonical" href="https://www.footforwardedinburgh.com/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Foot Forward Edinburgh" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:url" content="https://www.footforwardedinburgh.com/" />
+    <meta property="og:title" content="Foot Forward Edinburgh | Football Academy & Coaching with Josh Walker" />
+    <meta property="og:description" content="Edinburgh's elite football academy. Weekly youth football camps at George Watson's College, coached by former England Youth International and UEFA licensed coach Josh Walker." />
+    <meta property="og:image" content="https://i.ibb.co/ksGn9g84/image-1306335.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="geo.region" content="GB-EDH" />
+    <meta name="geo.placename" content="Edinburgh" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://images.squarespace-cdn.com" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["SportsActivityLocation", "LocalBusiness"],
+          "@id": "https://www.footforwardedinburgh.com/#academy",
+          "name": "Foot Forward Edinburgh",
+          "alternateName": ["Foot Forward Coaching", "Foot Forward Academy"],
+          "description": "Youth football academy in Edinburgh running weekly membership camps on the Top Astro at George Watson's College, coached by former England Youth International and UEFA licensed coach Josh Walker.",
+          "url": "https://www.footforwardedinburgh.com/",
+          "logo": "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/9051e63e-e492-4263-8522-45cd791b967c/d98634da-d16b-4742-a66d-f153c34045c6__2_-removebg-preview.png?format=750w",
+          "image": "https://i.ibb.co/ksGn9g84/image-1306335.jpg",
+          "telephone": "+447521484647",
+          "email": "footforwardcoaching@gmail.com",
+          "sport": "Association football",
+          "address": {
+            "@type": "PostalAddress",
+            "name": "George Watson's College, Top Astro Pitch",
+            "streetAddress": "Colinton Rd",
+            "addressLocality": "Edinburgh",
+            "postalCode": "EH10 5EG",
+            "addressCountry": "GB"
+          },
+          "geo": { "@type": "GeoCoordinates", "latitude": 55.9322, "longitude": -3.2129 },
+          "areaServed": { "@type": "City", "name": "Edinburgh" },
+          "founder": { "@id": "https://www.footforwardedinburgh.com/#josh-walker" },
+          "potentialAction": {
+            "@type": "ReserveAction",
+            "name": "Book a session",
+            "target": "https://app.teamfeepay.com/foot-forward-coaching/store/3579"
+          },
+          "sameAs": [
+            "https://apps.apple.com/gb/app/foot-forward-coaching/id6443740570",
+            "https://play.google.com/store/apps/details?id=app.activitypro.footforwardcoaching"
+          ]
+        },
+        {
+          "@type": "Person",
+          "@id": "https://www.footforwardedinburgh.com/#josh-walker",
+          "name": "Josh Walker",
+          "jobTitle": "Head Coach and Founder",
+          "description": "Former England Youth International with over ten years in professional football. UEFA licensed coach and founder of Foot Forward Edinburgh.",
+          "url": "https://www.footforwardedinburgh.com/about",
+          "worksFor": { "@id": "https://www.footforwardedinburgh.com/#academy" }
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.footforwardedinburgh.com/#website",
+          "url": "https://www.footforwardedinburgh.com/",
+          "name": "Foot Forward Edinburgh",
+          "inLanguage": "en-GB",
+          "publisher": { "@id": "https://www.footforwardedinburgh.com/#academy" }
         }
-      }
+      ]
+    }
     </script>
-            
-    <style>
-      @keyframes revealUp {
-        from { transform: translateY(100px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-      }
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      
-      body {
-        background-color: #000000;
-        color: white;
-        scroll-behavior: smooth;
-        overflow-x: hidden;
-      }
-      .outline-text {
-        -webkit-text-stroke: 2px white;
-        color: transparent;
-      }
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #000;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #EE1D23;
-        border-radius: 10px;
-      }
-      .perspective-container {
-        perspective: 1500px;
-      }
-      .reveal-delay-1 { animation-delay: 0.2s; }
-      .reveal-delay-2 { animation-delay: 0.4s; }
-      .reveal-delay-3 { animation-delay: 0.6s; }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
-    "@react-three/drei": "https://esm.sh/@react-three/drei@^10.7.7",
-    "@react-three/fiber": "https://esm.sh/@react-three/fiber@^9.5.0",
-    "three": "https://esm.sh/three@^0.182.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css"><!-- Meta Pixel Code -->
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1850461102541636');
-fbq('track', 'PageView');
-</script>
 
-
-
-</head>
+    <!-- Meta Pixel Code -->
+    <script>
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1850461102541636');
+      fbq('track', 'PageView');
+    </script>
+  </head>
   <body>
-    <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <div id="root"><!--PRERENDER--></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>

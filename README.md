@@ -1,20 +1,21 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Foot Forward Edinburgh website
 
-# Run and deploy your AI Studio app
+React + Vite + Tailwind. Hosted on Vercel.
 
-This contains everything you need to run your app locally.
+## Run locally
+```
+npm install
+npm run dev
+```
 
-View your app in AI Studio: https://ai.studio/apps/drive/1Jms8EfzFcv2RYYf3eI-N2otGofyigdTQ
+## Where to change things
+- **Booking link, app links, phone, email, socials:** `config/site.ts`. Paste the booking URL into `BOOKING_URL`; every "Book a session" button uses it.
+- **Page titles and Google/AI descriptions:** `seo/routes.ts`
+- **Academy FAQs** (shown on the page and sent to Google as FAQ data): `seo/faqs.ts`
+- **Business details for Google (schema.org):** the JSON-LD block in `index.html`
+- **AI assistant summary:** `public/llms.txt`
 
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## SEO notes
+- Clean URLs (`/academy` rather than `/#/academy`). Old hash links redirect automatically.
+- `npm run build` writes a static HTML file per page with its own title, description, canonical and readable text, so search engines and AI crawlers that do not run JavaScript still see the content. It also generates `sitemap.xml`.
+- `public/robots.txt` allows Google, Bing and the main AI search crawlers.

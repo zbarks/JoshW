@@ -1,78 +1,74 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MapPin, Instagram, Facebook, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Facebook } from 'lucide-react';
+import { SITE } from '../config/site';
+import { BookButton } from './BookLinks';
 
-const Footer: React.FC = () => {
-  const logoUrl = "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/9051e63e-e492-4263-8522-45cd791b967c/d98634da-d16b-4742-a66d-f153c34045c6__2_-removebg-preview.png?format=1500w";
-
-  return (
-    <footer className="bg-brandBlack pt-20 pb-8 border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
-          {/* Brand Info */}
-          <div>
-            <img src={logoUrl} alt="Foot Forward Edinburgh" className="h-20 w-auto mb-8" />
-            <p className="text-gray-400 text-sm leading-relaxed mb-8 font-bold uppercase tracking-tight">
-              Edinburgh's Leading Football Academy. Professional standards for every player. Managed by Josh Walker.
-            </p>
-            <div className="flex space-x-6">
-              <a href="#" className="text-gray-500 hover:text-brandRed transition-colors"><Instagram size={28} /></a>
-              <a href="#" className="text-gray-500 hover:text-brandRed transition-colors"><Facebook size={28} /></a>
-              <a href="#" className="text-gray-500 hover:text-brandRed transition-colors"><Twitter size={28} /></a>
+const Footer: React.FC = () => (
+  <footer className="border-t border-white/10 bg-brandBlack px-5 pb-8 pt-16">
+    <div className="container-page">
+      <div className="mb-14 grid grid-cols-1 gap-12 md:grid-cols-[1.4fr_1fr_1.2fr]">
+        <div>
+          <img src={SITE.logo} alt="Foot Forward Edinburgh" width={140} height={56} loading="lazy" className="mb-6 h-14 w-auto" />
+          <p className="mb-6 max-w-xs text-sm leading-relaxed text-neutral-400">
+            Edinburgh's leading football academy. Professional standards for every player. Managed by Josh Walker.
+          </p>
+          <BookButton where="footer" className="btn-primary px-5 py-2.5" icon={false} />
+          {(SITE.social.instagram || SITE.social.facebook) && (
+            <div className="mt-6 flex gap-5">
+              {SITE.social.instagram && (
+                <a href={SITE.social.instagram} aria-label="Instagram" className="text-neutral-500 hover:text-white"><Instagram size={22} /></a>
+              )}
+              {SITE.social.facebook && (
+                <a href={SITE.social.facebook} aria-label="Facebook" className="text-neutral-500 hover:text-white"><Facebook size={22} /></a>
+              )}
             </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-black text-white mb-8 uppercase italic tracking-[0.3em] text-brandRed text-xs">DIRECT LINKS</h4>
-            <ul className="space-y-4">
-              <li><Link to="/what-we-do" className="text-gray-400 hover:text-white transition-colors text-xs font-black uppercase tracking-widest italic">What We Do</Link></li>
-              <li><Link to="/academy" className="text-gray-400 hover:text-white transition-colors text-xs font-black uppercase tracking-widest italic">Academy</Link></li>
-              <li><Link to="/about" className="text-gray-400 hover:text-white transition-colors text-xs font-black uppercase tracking-widest italic">About Me</Link></li>
-              <li><Link to="/reviews" className="text-gray-400 hover:text-white transition-colors text-xs font-black uppercase tracking-widest italic">Reviews</Link></li>
-              <li><Link to="/contact" className="text-gray-400 hover:text-white transition-colors text-xs font-black uppercase tracking-widest italic">Contact</Link></li>
-            </ul>
-          </div>
-
-          {/* Contact Details */}
-          <div>
-            <h4 className="font-black text-white mb-8 uppercase italic tracking-[0.3em] text-brandRed text-xs">CONTACT</h4>
-            <ul className="space-y-6">
-              <li className="flex items-center space-x-4 text-sm">
-                <Mail size={20} className="text-brandRed" />
-                <a href="mailto:footforwardcoaching@gmail.com" className="text-gray-400 hover:text-white transition-colors font-black uppercase tracking-tight">
-                  footforwardcoaching@gmail.com
-                </a>
-              </li>
-              <li className="flex items-center space-x-4 text-sm">
-                <Phone size={20} className="text-brandRed" />
-                <a href="tel:07521484647" className="text-gray-400 hover:text-white transition-colors font-black uppercase tracking-tight">
-                  07521484647
-                </a>
-              </li>
-              <li className="flex items-center space-x-4 text-sm">
-                <MapPin size={20} className="text-brandRed" />
-                <span className="text-gray-400 font-black uppercase tracking-tight uppercase">GEORGE WATSON'S COLLEGE, EDINBURGH</span>
-              </li>
-            </ul>
-          </div>
+          )}
         </div>
 
-        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[10px] text-gray-600 font-black uppercase tracking-[0.3em]">
-          <p>© 2024 Foot Forward Coaching - Edinburgh football academy</p>
-          <a 
-  href="https://www.barkerdigital.co.uk/" 
-  target="_blank" 
-  rel="noopener noreferrer"
-  className="mt-4 md:mt-0"
->
-  DESIGNED BY BARKER DIGITAL.
-</a>
+        <div>
+          <h2 className="mb-5 font-heading text-sm font-bold text-white">Direct links</h2>
+          <ul className="space-y-3 text-sm">
+            {[
+              ['What We Do', '/what-we-do'],
+              ['Academy', '/academy'],
+              ['About Me', '/about'],
+              ['Reviews', '/reviews'],
+              ['Gallery', '/gallery'],
+              ['Contact', '/contact'],
+            ].map(([label, to]) => (
+              <li key={to}><Link to={to} className="text-neutral-400 transition-colors hover:text-white">{label}</Link></li>
+            ))}
+          </ul>
         </div>
+
+        <address className="not-italic">
+          <h2 className="mb-5 font-heading text-sm font-bold text-white">Contact</h2>
+          <ul className="space-y-4 text-sm">
+            <li className="flex items-start gap-3">
+              <Mail size={18} className="mt-0.5 shrink-0 text-brandRed" aria-hidden />
+              <a href={`mailto:${SITE.email}`} className="break-all text-neutral-400 hover:text-white">{SITE.email}</a>
+            </li>
+            <li className="flex items-start gap-3">
+              <Phone size={18} className="mt-0.5 shrink-0 text-brandRed" aria-hidden />
+              <a href={SITE.phoneHref} className="text-neutral-400 hover:text-white">{SITE.phoneDisplay}</a>
+            </li>
+            <li className="flex items-start gap-3">
+              <MapPin size={18} className="mt-0.5 shrink-0 text-brandRed" aria-hidden />
+              <span className="text-neutral-400">{SITE.venue}, {SITE.street}, {SITE.locality} {SITE.postcode}</span>
+            </li>
+          </ul>
+        </address>
       </div>
-    </footer>
-  );
-};
+
+      <div className="flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-xs text-neutral-500 md:flex-row">
+        <p>© {new Date().getFullYear()} Foot Forward Coaching. Edinburgh football academy.</p>
+        <a href="https://www.barkerdigital.co.uk/" target="_blank" rel="noopener" className="hover:text-white">
+          Designed by Barker Digital
+        </a>
+      </div>
+    </div>
+  </footer>
+);
 
 export default Footer;

@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-brandBlack text-white font-sans antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: #EE1D23; color: #fff; }
+  :focus-visible { outline: 2px solid #EE1D23; outline-offset: 3px; border-radius: 4px; }
+
+  /* Static crawler content, replaced by React on load */
+  .prerender { max-width: 42rem; margin: 0 auto; padding: 6rem 1.5rem; color: #d4d4d4; line-height: 1.6; font-family: Inter, system-ui, sans-serif; }
+  .prerender a { color: #fff; }
+  .prerender h1, .prerender h2, .prerender h3 { color: #fff; font-family: Montserrat, system-ui, sans-serif; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brandRed px-7 py-3.5 font-heading text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-[#d4151b] whitespace-nowrap;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-7 py-3.5 font-heading text-sm font-bold uppercase tracking-wide text-white transition-colors hover:border-white hover:bg-white hover:text-brandBlack whitespace-nowrap;
+  }
+  .btn-secondary-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-brandBlack/20 px-7 py-3.5 font-heading text-sm font-bold uppercase tracking-wide text-brandBlack transition-colors hover:bg-brandBlack hover:text-white whitespace-nowrap;
+  }
+  .kicker { @apply mb-3 text-sm font-semibold text-brandRed; }
+  .display { @apply font-heading font-extrabold uppercase leading-[0.95] tracking-tight; }
+  .section { @apply px-5 py-20 md:py-28; }
+  .container-page { @apply mx-auto max-w-6xl; }
+  .field { @apply w-full rounded-xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-brandBlack focus:border-brandRed focus:outline-none focus:ring-2 focus:ring-brandRed/30; }
+  .field-label { @apply mb-2 block text-sm font-semibold text-brandBlack; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { SITE } from '../config/site';
+import { BookButton } from '../components/BookLinks';
 import emailjs from '@emailjs/browser';
 
 const Contact: React.FC = () => {
@@ -55,141 +57,94 @@ const Contact: React.FC = () => {
   };
 
   return (
-    <div className="pt-24 bg-brandBlack">
-      <section className="py-24 bg-brandBlack px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            {/* Contact Details */}
-            <div>
-              <h1 className="font-heading font-black text-5xl md:text-7xl mb-8 uppercase italic">Get In Touch</h1>
-              <p className="text-xl text-gray-400 mb-12 font-bold">
-                Ready to take your game to the next level? Contact us today.
-              </p>
+    <div className="bg-brandBlack">
+      <section className="section">
+        <div className="container-page grid grid-cols-1 gap-14 lg:grid-cols-2 lg:gap-20">
+          <div>
+            <h1 className="display mb-6 text-5xl text-white md:text-7xl">Get in touch</h1>
+            <p className="mb-12 text-xl text-neutral-300">Ready to take your game to the next level? Contact us today.</p>
 
-              <div className="space-y-8">
-                <div className="flex items-center space-x-6 group">
-                  <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-brandRed group-hover:bg-brandRed group-hover:text-white transition-all">
-                    <Mail size={32} />
+            <ul className="mb-12 space-y-7">
+              {[
+                { icon: Mail, label: 'Email', value: SITE.email, href: `mailto:${SITE.email}` },
+                { icon: Phone, label: 'Phone', value: SITE.phoneDisplay, href: SITE.phoneHref },
+                { icon: MapPin, label: 'Location', value: `${SITE.venue}, Edinburgh ${SITE.postcode}` },
+              ].map(({ icon: Icon, label, value, href }) => (
+                <li key={label} className="flex items-start gap-5">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/5 text-brandRed">
+                    <Icon size={22} aria-hidden />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-sm text-neutral-500">{label}</p>
+                    {href ? (
+                      <a href={href} className="break-words text-lg font-semibold text-white hover:text-brandRed md:text-xl">{value}</a>
+                    ) : (
+                      <p className="text-lg font-semibold text-white md:text-xl">{value}</p>
+                    )}
                   </div>
-                  <div>
-                    <p className="text-sm text-gray-500 uppercase font-black tracking-widest">Email</p>
-                    <a href="mailto:josh@footforwardedinburgh.com" className="text-xl md:text-2xl font-black text-white hover:text-brandRed transition-colors">
-                      josh@footforwardedinburgh.com
-                    </a>
-                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="rounded-2xl border border-white/10 p-6">
+              <p className="mb-4 text-neutral-300">Looking to book a place?</p>
+              <BookButton where="contact" />
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-white p-8 text-brandBlack md:p-10">
+            <h2 className="mb-8 font-heading text-2xl font-extrabold uppercase">Send a message</h2>
+
+            {status === 'success' && (
+              <div role="status" className="mb-6 rounded-xl bg-green-50 p-4 text-green-800">
+                <p className="font-semibold">Message sent.</p>
+                <p className="text-sm">We'll get back to you soon.</p>
+              </div>
+            )}
+            {status === 'error' && (
+              <div role="alert" className="mb-6 rounded-xl bg-red-50 p-4 text-red-800">
+                <p className="font-semibold">Your message did not send.</p>
+                <p className="text-sm">Please try again or email us directly.</p>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <div>
+                  <label htmlFor="firstName" className="field-label">First name</label>
+                  <input id="firstName" type="text" name="firstName" autoComplete="given-name" value={formData.firstName} onChange={handleChange} required className="field" />
                 </div>
-
-                <div className="flex items-center space-x-6 group">
-                  <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-brandRed group-hover:bg-brandRed group-hover:text-white transition-all">
-                    <Phone size={32} />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 uppercase font-black tracking-widest">Phone</p>
-                    <a href="tel:07521484647" className="text-xl md:text-2xl font-black text-white hover:text-brandRed transition-colors">
-                      07521484647
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-6">
-                  <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-brandRed">
-                    <MapPin size={32} />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 uppercase font-black tracking-widest">Location</p>
-                    <p className="text-xl md:text-2xl font-black text-white">Edinburgh, Scotland</p>
-                  </div>
+                <div>
+                  <label htmlFor="lastName" className="field-label">Last name</label>
+                  <input id="lastName" type="text" name="lastName" autoComplete="family-name" value={formData.lastName} onChange={handleChange} required className="field" />
                 </div>
               </div>
-            </div>
-
-            {/* Form */}
-            <div className="bg-white rounded-3xl p-8 md:p-12 text-brandBlack shadow-2xl border-t-8 border-brandRed">
-              <h2 className="text-3xl font-black mb-8 uppercase italic">Send a Message</h2>
-              
-              {status === 'success' && (
-                <div className="mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 rounded">
-                  <p className="font-bold">Message sent successfully!</p>
-                  <p className="text-sm">We'll get back to you soon.</p>
-                </div>
-              )}
-              
-              {status === 'error' && (
-                <div className="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 rounded">
-                  <p className="font-bold">Oops! Something went wrong.</p>
-                  <p className="text-sm">Please try again or email us directly.</p>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-xs font-black uppercase tracking-widest mb-2">First Name</label>
-                    <input 
-                      type="text" 
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleChange}
-                      required
-                      className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed" 
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-black uppercase tracking-widest mb-2">Last Name</label>
-                    <input 
-                      type="text" 
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      required
-                      className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed" 
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-widest mb-2">Email</label>
-                  <input 
-                    type="email" 
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed" 
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-widest mb-2">Message</label>
-                  <textarea 
-                    rows={4} 
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    className="w-full bg-gray-50 border border-gray-200 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandRed"
-                  ></textarea>
-                </div>
-                <button 
-                  type="submit"
-                  disabled={status === 'sending'}
-                  className="w-full bg-brandBlack text-white font-black py-4 rounded-xl flex items-center justify-center gap-3 hover:bg-brandRed transition-all uppercase italic tracking-widest disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {status === 'sending' ? 'SENDING...' : 'SEND'} <Send size={20} />
-                </button>
-              </form>
-            </div>
+              <div>
+                <label htmlFor="email" className="field-label">Email</label>
+                <input id="email" type="email" name="email" autoComplete="email" value={formData.email} onChange={handleChange} required className="field" />
+              </div>
+              <div>
+                <label htmlFor="message" className="field-label">Message</label>
+                <textarea id="message" rows={5} name="message" value={formData.message} onChange={handleChange} required className="field" />
+              </div>
+              <button type="submit" disabled={status === 'sending'} className="btn-primary w-full bg-brandBlack py-4 hover:bg-brandRed disabled:opacity-50">
+                {status === 'sending' ? 'Sending…' : 'Send message'} <Send size={18} aria-hidden />
+              </button>
+            </form>
           </div>
         </div>
       </section>
 
-      <section className="h-[400px] w-full bg-brandBlack border-t border-white/5">
-        <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d143000.00000000000!2d-3.188267!3d55.953252!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4887b800a5982623%3A0x64f2147b7ce71727!2sEdinburgh!5e0!3m2!1sen!2suk!4v1715000000000!5m2!1sen!2suk" 
-            width="100%" 
-            height="100%" 
-            style={{ border: 0, filter: 'grayscale(1) invert(1)' }} 
-            allowFullScreen={true} 
-            loading="lazy"
-        ></iframe>
+      <section className="h-[380px] w-full border-t border-white/10">
+        <iframe
+          title="Map showing George Watson's College, Edinburgh"
+          src="https://www.google.com/maps?q=George+Watson%27s+College,+Colinton+Rd,+Edinburgh+EH10+5EG&output=embed"
+          width="100%"
+          height="100%"
+          style={{ border: 0, filter: 'grayscale(1) invert(0.92)' }}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
       </section>
     </div>
   );

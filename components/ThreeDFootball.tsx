@@ -1,46 +1,28 @@
-
 import React, { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Float } from '@react-three/drei';
 import * as THREE from 'three';
 
 const Football = () => {
   const meshRef = useRef<THREE.Mesh>(null!);
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.01;
-      meshRef.current.rotation.x += 0.005;
-    }
+  useFrame((_, delta) => {
+    meshRef.current.rotation.y += delta * 0.25;
+    meshRef.current.rotation.x += delta * 0.1;
   });
-
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[2, 32, 32]} />
-      <meshStandardMaterial 
-        color="#000000" 
-        wireframe 
-        emissive="#EE1D23" 
-        emissiveIntensity={0.8} 
-      />
+      <icosahedronGeometry args={[2.2, 2]} />
+      <meshBasicMaterial color="#EE1D23" wireframe transparent opacity={0.55} />
     </mesh>
   );
 };
 
-const ThreeDFootball: React.FC = () => {
-  return (
-    <div className="w-full h-[400px] lg:h-[600px] relative">
-      <Canvas camera={{ position: [0, 0, 5] }}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
-        <Float speed={2} rotationIntensity={1} floatIntensity={1}>
-          <Football />
-        </Float>
-        <OrbitControls enableZoom={false} />
-      </Canvas>
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-brandBlack via-transparent to-transparent" />
-    </div>
-  );
-};
+// Decorative wireframe ball that sits behind the hero wordmark.
+const ThreeDFootball: React.FC = () => (
+  <div className="h-full w-full" aria-hidden>
+    <Canvas camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]} gl={{ antialias: true, alpha: true }}>
+      <Football />
+    </Canvas>
+  </div>
+);
 
 export default ThreeDFootball;

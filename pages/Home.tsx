@@ -1,84 +1,37 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { ArrowDown, MapPin, Smartphone, Users } from 'lucide-react';
-import ThreeDFootball from '../components/ThreeDFootball';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { MapPin, CalendarCheck, Users } from 'lucide-react';
+import { SITE } from '../config/site';
+import { AppButton, BookButton } from '../components/BookLinks';
 
-// Facebook Pixel TypeScript safety
-declare global {
-  interface Window {
-    fbq: any;
-  }
-}
+const ThreeDFootball = lazy(() => import('../components/ThreeDFootball'));
 
 const GALLERY_IMAGES = [
   "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/d48238f5-3960-4a58-9df2-a11b8565a30c/7d8dc65e-86d0-417f-8e44-552ce498052d.jpg?format=500w",
-  "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/34ca7568-54c7-4765-84b9-a50bb56c26aa/b7807601-8051-4cb3-851d-10f6628b4bdb.jpg?format=750w",
-  "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/1677397183785-G2LHBJ3L99QK0LF6AMFZ/7e6d4829-2f37-4b8f-b5d4-eeedd6267172.jpg?format=750w",
-  "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/610f70ad-65d1-47b7-8fc4-6d6ffb7aa63e/85135050-7fb7-4917-80d3-e06f90d5df34.jpg?format=750w",
-  "https://i.ibb.co/ksGn9g84/image-1306335.jpg"
+  "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/34ca7568-54c7-4765-84b9-a50bb56c26aa/b7807601-8051-4cb3-851d-10f6628b4bdb.jpg?format=500w",
+  "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/1677397183785-G2LHBJ3L99QK0LF6AMFZ/7e6d4829-2f37-4b8f-b5d4-eeedd6267172.jpg?format=500w",
+  "https://images.squarespace-cdn.com/content/v1/6347f13be3c69c5db5a7394f/610f70ad-65d1-47b7-8fc4-6d6ffb7aa63e/85135050-7fb7-4917-80d3-e06f90d5df34.jpg?format=500w",
+  "https://i.ibb.co/ksGn9g84/image-1306335.jpg",
+];
+
+const features = [
+  { icon: MapPin, title: 'Top astro', desc: "Premium facilities at George Watson's College." },
+  { icon: CalendarCheck, title: 'Easy booking', desc: 'Book online, with scheduling and pro feedback via our app.' },
+  { icon: Users, title: 'Groups', desc: 'Structured age-appropriate elite training.' },
 ];
 
 const Home: React.FC = () => {
-  const [scrollY, setScrollY] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Email sign-up state
+  const [showBall, setShowBall] = useState(false);
   const [email, setEmail] = useState('');
   const [signUpStatus, setSignUpStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
-  // App store detection
-  const [appStoreUrl, setAppStoreUrl] = useState('');
-  const [appStoreLogo, setAppStoreLogo] = useState('');
-  const [appStoreText, setAppStoreText] = useState('BOOK THROUGH OUR APP');
-
-  // Facebook Pixel handler: fires event THEN redirects
-  const handleAppDownloadClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (typeof window !== 'undefined' && window.fbq) {
-      window.fbq('trackCustom', 'AppDownloadClick', { platform: appStoreText });
-    }
-    setTimeout(() => {
-      window.location.href = appStoreUrl;
-    }, 300);
-  };
-
+  // Load the 3D ball after first paint, and skip it for reduced-motion users.
   useEffect(() => {
-    setIsLoaded(true);
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Detect device and set appropriate app store link
-    const userAgent = navigator.userAgent.toLowerCase();
-    if (/iphone|ipad|ipod/.test(userAgent)) {
-      // iOS device
-      setAppStoreUrl('https://apps.apple.com/th/app/foot-forward-coaching/id6443740570');
-      setAppStoreLogo('https://img.icons8.com/ios-filled/512/FFFFFF/mac-os.png');
-      setAppStoreText('DOWNLOAD ON APP STORE');
-    } else if (/android/.test(userAgent)) {
-      // Android device
-      setAppStoreUrl('https://play.google.com/store/apps/details?id=app.activitypro.footforwardcoaching&hl=en_GB');
-      setAppStoreLogo('http://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_Play_2022_icon.svg/960px-Google_Play_2022_icon.svg.png');
-      setAppStoreText('GET IT ON GOOGLE PLAY');
-    } else {
-      // Desktop or other - default to iOS
-      setAppStoreUrl('https://apps.apple.com/th/app/foot-forward-coaching/id6443740570');
-      setAppStoreLogo('https://img.icons8.com/ios-filled/512/FFFFFF/mac-os.png');
-      setAppStoreText('BOOK THROUGH OUR APP');
-    }
-
-    return () => window.removeEventListener('scroll', handleScroll);
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const id = window.setTimeout(() => setShowBall(true), 300);
+    return () => window.clearTimeout(id);
   }, []);
-
-  const getSleek3DStyle = (offset: number) => {
-    const progress = Math.max(0, scrollY - offset);
-    return {
-      transform: `perspective(1200px) translateY(${progress * -0.05}px) translateZ(${Math.min(50, progress * 0.1)}px) rotateX(${Math.min(3, progress * 0.005)}deg)`,
-      opacity: 1
-    };
-  };
 
   const handleEmailSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,20 +40,20 @@ const Home: React.FC = () => {
       setSignUpStatus('error');
       return;
     }
-
     setSignUpStatus('loading');
     setErrorMsg('');
-
     try {
+      // Firebase loads only when someone signs up, keeping the homepage fast.
+      const [{ collection, addDoc, serverTimestamp }, { db }] = await Promise.all([
+        import('firebase/firestore'),
+        import('../firebase/config'),
+      ]);
       await addDoc(collection(db, 'subscribers'), {
         email: email.toLowerCase().trim(),
         signedUpAt: serverTimestamp(),
-        source: 'website_footer'
+        source: 'website_footer',
       });
-
-      // Fire Facebook Pixel Lead event on successful sign-up
-      if (window.fbq) { window.fbq('track', 'Lead'); }
-
+      window.fbq?.('track', 'Lead');
       setSignUpStatus('success');
       setEmail('');
     } catch (err) {
@@ -111,229 +64,173 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div ref={containerRef} className="bg-brandBlack overflow-x-hidden">
-      {/* 3D Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 overflow-hidden">
-        <div 
-          className="absolute inset-0 z-0 opacity-15"
-          style={{ 
-            backgroundImage: 'radial-gradient(circle at 50% 50%, #EE1D23 0%, transparent 70%)',
-            transform: `translateY(${scrollY * 0.2}px) scale(${1 + scrollY * 0.0003})`
-          }}
-        />
-        
-        <div className="relative z-10 text-center max-w-7xl mx-auto flex flex-col items-center">
-          <div className={`${isLoaded ? 'animate-reveal-up' : 'opacity-0'}`}>
-            <h1 className="font-heading font-black text-7xl md:text-9xl lg:text-[10rem] mb-2 leading-[0.85] uppercase tracking-normal text-white">
-              FOOT<br />
-              <span className="text-brandRed">FORWARD</span>
-            </h1>
-          </div>
-          
-          <div className={`${isLoaded ? 'animate-reveal-up reveal-delay-1' : 'opacity-0'} mt-10 space-y-8`}>
-            <h2 className="text-xl md:text-3xl font-heading font-bold text-gray-400 uppercase tracking-[0.2em]">
-              EDINBURGH'S FOOTBALL ELITE ACADEMY
-            </h2>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12">
-              <a 
-                href={appStoreUrl}
-                onClick={handleAppDownloadClick}
-                className="group relative px-10 py-5 bg-brandRed text-white font-black rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(238,29,35,0.4)] uppercase tracking-wider text-sm sm:text-base"
-              >
-                <span className="relative z-10 flex items-center gap-3">
-                  <img
-                    src={appStoreLogo}
-                    alt="App Store"
-                    className="w-5 h-5" 
-                  /> 
-                  {appStoreText}
-                </span>
-              </a>
-              <a 
-                href="#bio" 
-                className="px-10 py-5 border border-white/20 text-white font-bold rounded-full hover:bg-white hover:text-brandBlack transition-all uppercase tracking-wider text-sm sm:text-base"
-              >
-                MEET JOSH
-              </a>
-            </div>
-          </div>
-
-          <div className="mt-20 w-full flex justify-center scale-90 md:scale-100">
-            <ThreeDFootball />
+    <div className="overflow-x-hidden bg-brandBlack">
+      {/* Hero */}
+      <section className="relative flex min-h-[calc(100svh-72px)] items-center justify-center overflow-hidden px-5 py-20">
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="h-[min(90vw,640px)] w-[min(90vw,640px)]">
+            {showBall && (
+              <Suspense fallback={null}>
+                <ThreeDFootball />
+              </Suspense>
+            )}
           </div>
         </div>
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,#000_70%)]" />
 
-        <div className={`absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce text-brandRed transition-opacity duration-1000 ${scrollY > 100 ? 'opacity-0' : 'opacity-100'}`}>
-          <ArrowDown size={32} />
+        <div className="relative z-10 flex w-full max-w-6xl flex-col items-center text-center">
+          <h1 className="animate-reveal-up">
+            <span className="display block whitespace-nowrap text-[clamp(2.5rem,10.5vw,8rem)] text-white">
+              Foot <span className="text-brandRed">Forward</span>
+            </span>
+            <span className="mt-5 block whitespace-nowrap font-heading text-[clamp(0.7rem,3.3vw,1.5rem)] font-bold uppercase tracking-[0.06em] text-neutral-300 sm:tracking-[0.12em]">
+              Edinburgh's elite football academy
+            </span>
+          </h1>
+
+          <div className="mt-10 flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row [animation-delay:150ms] animate-reveal-up">
+            <BookButton where="hero" className="btn-primary w-full px-9 py-4 text-base sm:w-auto" />
+            <AppButton where="hero" className="btn-secondary w-full py-4 sm:w-auto" />
+          </div>
+          <a href="#bio" className="mt-6 text-sm font-medium text-neutral-400 underline-offset-4 hover:text-white hover:underline">
+            Meet Josh
+          </a>
         </div>
       </section>
 
-      {/* Biography Section */}
-      <section id="bio" className="py-48 px-4 relative">
-        <div 
-          className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center"
-          style={getSleek3DStyle(500)}
-        >
-          <div className="relative group">
-            <div className="absolute -inset-2 bg-brandRed/10 blur-2xl rounded-[3rem]" />
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-white/10 shadow-2xl bg-charcoal/50">
-              <img 
-                src="https://c8.alamy.com/comp/JDXXBB/josh-walker-middlesbrough-fc-riverside-stadium-middlesbrough-england-JDXXBB.jpg" 
-                alt="Josh Walker" 
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-              <div className="absolute bottom-10 left-10">
-                <p className="text-brandRed font-black tracking-widest text-xs mb-2 uppercase">HEAD COACH</p>
-                <h3 className="text-4xl font-heading font-black text-white uppercase">JOSH WALKER</h3>
-              </div>
-            </div>
-          </div>
+      {/* Biography */}
+      <section id="bio" className="section scroll-mt-20">
+        <div className="container-page grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
+          <figure className="relative overflow-hidden rounded-2xl border border-white/10 bg-charcoal">
+            <img
+              src="https://c8.alamy.com/comp/JDXXBB/josh-walker-middlesbrough-fc-riverside-stadium-middlesbrough-england-JDXXBB.jpg"
+              alt="Josh Walker, head coach of Foot Forward Edinburgh, during his professional playing career"
+              width={800}
+              height={1000}
+              loading="lazy"
+              decoding="async"
+              className="aspect-[4/5] w-full object-cover"
+            />
+            <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-8">
+              <p className="text-sm font-semibold text-neutral-300">Head coach</p>
+              <p className="display text-3xl text-white">Josh Walker</p>
+            </figcaption>
+          </figure>
 
-          <div className="space-y-10">
-            <h4 className="text-brandRed font-black text-sm uppercase tracking-[0.4em]">PRO BACKGROUND</h4>
-            <p className="text-4xl md:text-5xl text-white font-heading font-black leading-tight uppercase">
-              "Elite standards. <br />Every single session."
-            </p>
-            <p className="text-lg text-gray-300 font-medium leading-relaxed max-w-xl">
+          <div>
+            <h2 className="kicker">Pro background</h2>
+            <p className="display mb-8 text-4xl text-white md:text-5xl">"Elite standards. Every single session."</p>
+            <p className="mb-10 max-w-xl text-lg leading-relaxed text-neutral-300">
               From England Youth International to over a decade in professional football. Josh brings a unique blend of high-level experience and UEFA-certified technical coaching to Edinburgh's youth.
             </p>
-            <div className="grid grid-cols-2 gap-10">
-              <div>
-                <p className="text-5xl font-black text-white mb-1">10+</p>
-                <p className="text-gray-500 font-bold uppercase text-[10px] tracking-widest">YEARS PROFESSIONAL</p>
+            <dl className="grid max-w-md grid-cols-2 gap-8 border-t border-white/10 pt-8">
+              <div className="flex flex-col-reverse">
+                <dt className="text-sm text-neutral-400">Years professional</dt>
+                <dd className="display text-5xl text-white">10+</dd>
               </div>
-              <div>
-                <p className="text-5xl font-black text-white mb-1">UEFA</p>
-                <p className="text-gray-500 font-bold uppercase text-[10px] tracking-widest">LICENSED COACH</p>
+              <div className="flex flex-col-reverse">
+                <dt className="text-sm text-neutral-400">Licensed coach</dt>
+                <dd className="display text-5xl text-white">UEFA</dd>
               </div>
-            </div>
+            </dl>
+            <Link to="/about" className="mt-10 inline-block text-sm font-semibold text-white underline decoration-brandRed decoration-2 underline-offset-8 hover:text-brandRed">
+              More about Josh
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Feature Cards Section */}
-      <section className="py-40 bg-white text-brandBlack">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-heading font-black uppercase tracking-tight mb-4">THE ACADEMY</h2>
-            <div className="h-1.5 w-24 bg-brandRed mx-auto" />
+      {/* The academy */}
+      <section className="section bg-white text-brandBlack">
+        <div className="container-page">
+          <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <h2 className="display text-5xl md:text-7xl">The academy</h2>
+            <BookButton where="academy-strip" className="btn-primary self-start md:self-auto" />
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {[
-              { icon: <MapPin />, title: "TOP ASTRO", desc: "Premium facilities at George Watson's College." },
-              { icon: <Smartphone />, title: "APP ONLY", desc: "Seamless scheduling and pro feedback via our app." },
-              { icon: <Users />, title: "GROUPS", desc: "Structured age-appropriate elite training." }
-            ].map((feature, i) => (
-              <div 
-                key={i}
-                className="group p-12 bg-gray-50 rounded-[2.5rem] border border-gray-100 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 hover:bg-white"
-              >
-                <div className="w-14 h-14 bg-brandBlack text-brandRed rounded-2xl flex items-center justify-center mb-8 transition-transform group-hover:scale-110">
-                  {React.cloneElement(feature.icon as React.ReactElement, { size: 28 })}
-                </div>
-                <h4 className="text-2xl font-black mb-4 uppercase">{feature.title}</h4>
-                <p className="text-gray-500 font-bold leading-relaxed">{feature.desc}</p>
+          <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-200 md:grid-cols-3">
+            {features.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="bg-white p-8 md:p-10">
+                <Icon size={28} className="mb-6 text-brandRed" aria-hidden />
+                <h3 className="mb-2 font-heading text-xl font-extrabold uppercase">{title}</h3>
+                <p className="leading-relaxed text-neutral-600">{desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section className="py-40 bg-brandBlack px-4">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-center text-3xl font-heading font-black mb-20 text-white uppercase tracking-widest">
-            THE <span className="text-brandRed">STANDARD</span>
-          </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+      {/* Photo strip */}
+      <section className="section">
+        <div className="container-page">
+          <div className="mb-12 flex items-end justify-between gap-6">
+            <h2 className="display text-3xl text-white md:text-4xl">The standard</h2>
+            <Link to="/gallery" className="text-sm font-semibold text-neutral-300 hover:text-white">View gallery</Link>
+          </div>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-5">
             {GALLERY_IMAGES.map((url, i) => (
-              <div 
-                key={i}
-                className="relative aspect-[3/4] rounded-2xl overflow-hidden group shadow-lg"
-                style={{ 
-                  transform: `translateY(${Math.sin((scrollY * 0.001) + i) * 8}px)` 
-                }}
-              >
-                <img 
-                  src={url} 
-                  alt="Academy Session" 
-                  className="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110" 
+              <div key={url} className={`overflow-hidden rounded-xl bg-charcoal ${i === 4 ? 'col-span-2 md:col-span-1' : ''}`}>
+                <img
+                  src={url}
+                  alt="Young players training at Foot Forward Edinburgh football academy"
+                  width={500}
+                  height={667}
+                  loading="lazy"
+                  decoding="async"
+                  className="aspect-[3/4] h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-brandRed/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* STAY IN THE LOOP — Email Sign-Up */}
-      <section className="py-32 bg-brandBlack border-t border-white/10 px-4">
-        <div className="max-w-2xl mx-auto text-center">
-          <p className="text-brandRed font-black text-xs uppercase tracking-[0.4em] mb-4">NEVER MISS A SESSION</p>
-          <h2 className="text-4xl md:text-6xl font-heading font-black text-white uppercase tracking-tight mb-4">
-            STAY IN THE LOOP
-          </h2>
-          <p className="text-gray-400 font-medium mb-12 text-lg">
-            Get first access to new sessions, camp announcements, and academy updates — straight to your inbox.
+      {/* Email sign-up */}
+      <section className="section border-t border-white/10">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="kicker">Never miss a session</p>
+          <h2 className="display mb-4 text-4xl text-white md:text-5xl">Stay in the loop</h2>
+          <p className="mb-10 text-lg text-neutral-400">
+            Get first access to new sessions, camp announcements, and academy updates, straight to your inbox.
           </p>
 
           {signUpStatus === 'success' ? (
-            <div className="py-8">
-              <p className="text-3xl font-black text-white uppercase mb-2">YOU'RE IN. 🔥</p>
-              <p className="text-gray-400 font-medium">We'll be in touch soon.</p>
+            <div role="status" className="py-6">
+              <p className="display mb-2 text-3xl text-white">You're in.</p>
+              <p className="text-neutral-400">We'll be in touch soon.</p>
             </div>
           ) : (
-            <form onSubmit={handleEmailSignUp} className="flex flex-col sm:flex-row gap-4 justify-center">
+            <form onSubmit={handleEmailSignUp} className="flex flex-col gap-3 sm:flex-row" noValidate>
+              <label htmlFor="signup-email" className="sr-only">Email address</label>
               <input
+                id="signup-email"
                 type="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
                   if (signUpStatus === 'error') setSignUpStatus('idle');
                 }}
-                placeholder="YOUR EMAIL ADDRESS"
-                className="flex-1 px-8 py-5 rounded-full bg-white/5 border border-white/15 text-white placeholder-gray-500 font-bold text-sm tracking-widest focus:outline-none focus:border-brandRed transition-colors"
+                placeholder="Your email address"
+                className="flex-1 rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-white placeholder-neutral-500 focus:border-brandRed focus:outline-none"
               />
-              <button
-                type="submit"
-                disabled={signUpStatus === 'loading'}
-                className="px-10 py-5 bg-brandRed text-white font-black rounded-full hover:scale-105 transition-transform uppercase tracking-widest text-sm shadow-xl disabled:opacity-60 disabled:cursor-not-allowed whitespace-nowrap"
-              >
-                {signUpStatus === 'loading' ? 'JOINING...' : 'JOIN UP'}
+              <button type="submit" disabled={signUpStatus === 'loading'} className="btn-secondary disabled:opacity-60">
+                {signUpStatus === 'loading' ? 'Joining…' : 'Join up'}
               </button>
             </form>
           )}
-
-          {signUpStatus === 'error' && (
-            <p className="mt-4 text-brandRed font-bold text-sm">{errorMsg}</p>
-          )}
+          {signUpStatus === 'error' && <p role="alert" className="mt-4 text-sm font-semibold text-brandRed">{errorMsg}</p>}
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="py-40 bg-charcoal relative overflow-hidden text-center px-4">
-        <div className="relative z-10 max-w-4xl mx-auto">
-          <h2 className="text-5xl md:text-8xl font-heading font-black text-white mb-10 uppercase tracking-tighter">
-            READY TO<br /><span className="text-brandRed">EVOLVE?</span>
+      <section className="section bg-charcoal text-center">
+        <div className="mx-auto max-w-4xl">
+          <h2 className="display mb-10 whitespace-nowrap text-[clamp(2.2rem,8vw,5.5rem)] text-white">
+            Ready to <span className="text-brandRed">evolve?</span>
           </h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <a 
-              href={appStoreUrl}
-              onClick={handleAppDownloadClick}
-              className="px-12 py-6 bg-brandRed text-white font-black rounded-full hover:scale-105 transition-transform uppercase tracking-widest text-base shadow-xl"
-            >
-              DOWNLOAD APP
-            </a>
-            <a 
-              href="mailto:footforwardcoaching@gmail.com"
-              className="px-12 py-6 border border-white/20 text-white font-bold rounded-full hover:bg-white hover:text-brandBlack transition-all uppercase tracking-widest text-base"
-            >
-              CONTACT DIRECT
-            </a>
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <BookButton where="final-cta" className="btn-primary w-full px-9 py-4 text-base sm:w-auto" />
+            <a href={`mailto:${SITE.email}`} className="btn-secondary w-full py-4 sm:w-auto">Contact direct</a>
           </div>
         </div>
       </section>
